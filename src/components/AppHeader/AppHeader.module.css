@@ -9,16 +9,9 @@
   list-style-type: none;
 }
 
-.menuItem {
+.menuLink {
   display: flex;
   align-items: center;
-  padding: 20px;
-}
-
-.logo {
-  margin-right: 8px;
-}
-
-.headerIcon {
-  margin-right: 8px;
+  text-decoration: none;
+  color: var(--text-primary-color);
 }
