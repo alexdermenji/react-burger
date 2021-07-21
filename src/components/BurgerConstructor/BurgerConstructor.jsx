@@ -1,41 +1,37 @@
 import React from "react";
 
-import { ConstructorElement } from "@ya.praktikum/react-developer-burger-ui-components";
-import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
-import { Button } from "@ya.praktikum/react-developer-burger-ui-components";
-import { DragIcon } from "@ya.praktikum/react-developer-burger-ui-components";
+import {
+  ConstructorElement,
+  CurrencyIcon,
+  Button,
+  DragIcon,
+} from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./BurgerConstructor.module.css";
+import PropTypes from "prop-types";
+
 const BurgerConstructor = ({ data }) => {
-  let type = null;
+  const bun = data.find((item) => (item.type = "bun"));
+  const totalPrice = data.reduce((acc, item) => acc + item.price, 0);
+
   return (
     <section className={styles.section + " pt-25 pl-4"}>
       <div className={styles.constructorContainer + " mb-10"}>
+        <div className="mb-4 pl-8 pr-4">
+          <ConstructorElement
+            type="top"
+            isLocked={true}
+            text={`${bun.name} верх`}
+            price={bun.price}
+            thumbnail={bun.image}
+          ></ConstructorElement>
+        </div>
         <ul className={styles.productsList + " pr-4"}>
-          {data.map((item, index) => {
-            if (index === 0) {
-              type = "top";
-            } else if (index === data.length - 1) {
-              type = "bottom";
-            } else {
-              type = null;
-            }
+          {data.map((item) => {
+            if (item.type === "bun") return null;
             return (
-              <li
-                key={item._id}
-                className={
-                  index === 0 || index === data.length - 1
-                    ? "pl-8"
-                    : styles.productsItem
-                }
-              >
-                {index > 0 && index < data.length - 1 ? (
-                  <div className="mr-1">
-                    <DragIcon></DragIcon>
-                  </div>
-                ) : null}
-
+              <li key={item._id} className={styles.productsItem}>
+                <DragIcon />
                 <ConstructorElement
-                  type={type}
                   text={item.name}
                   price={item.price}
                   thumbnail={item.image}
@@ -44,18 +40,31 @@ const BurgerConstructor = ({ data }) => {
             );
           })}
         </ul>
+        <div className="mt-4 mb-10 pl-8 pr-4">
+          <ConstructorElement
+            type="bottom"
+            isLocked={true}
+            text={`${bun.name} (низ)`}
+            price={bun.price}
+            thumbnail={bun.image}
+          />
+        </div>
       </div>
       <div className={styles.checkout}>
         <div className="mr-10">
-          <span className="text text_type_digits-medium mr-1">610</span>
+          <span className="text text_type_digits-medium mr-1">
+            {totalPrice}
+          </span>
           <CurrencyIcon type="primary" />
         </div>
         <Button type="primary" size="medium">
-          Нажми на меня
+          Оформить заказ
         </Button>
       </div>
     </section>
   );
 };
+
+BurgerConstructor.propTypes = { data: PropTypes.arrayOf(PropTypes.object) };
 
 export default BurgerConstructor;

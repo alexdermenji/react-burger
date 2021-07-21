@@ -1,9 +1,11 @@
 import React from "react";
-import { Logo } from "@ya.praktikum/react-developer-burger-ui-components";
-import { BurgerIcon } from "@ya.praktikum/react-developer-burger-ui-components";
-import { ListIcon } from "@ya.praktikum/react-developer-burger-ui-components";
-import { ProfileIcon } from "@ya.praktikum/react-developer-burger-ui-components";
-import { Box } from "@ya.praktikum/react-developer-burger-ui-components";
+import {
+  Logo,
+  BurgerIcon,
+  ListIcon,
+  ProfileIcon,
+} from "@ya.praktikum/react-developer-burger-ui-components";
+
 import styles from "./AppHeader.module.css";
 
 const AppHeader = () => {
@@ -12,7 +14,7 @@ const AppHeader = () => {
       <ul className={styles.menuList}>
         <li className="p-5">
           <a
-            href="http://google.com"
+            href="#"
             className={styles.menuLink + " text text_type_main-default"}
           >
             <div className="mr-2">
@@ -23,7 +25,7 @@ const AppHeader = () => {
         </li>
         <li className="p-5">
           <a
-            href="http://google.com"
+            href="#"
             className={styles.menuLink + " text text_type_main-default"}
           >
             <div className="mr-2">
@@ -37,20 +39,17 @@ const AppHeader = () => {
       </ul>
 
       <div className={styles.logo}>
-        <Logo></Logo>
+        <Logo />
       </div>
       <div className="p-5">
         <a
-          href="http://google.com"
+          href="#"
           className={styles.menuLink + " text text_type_main-default"}
         >
           <div className="mr-2">
             <ProfileIcon type="secondary"></ProfileIcon>
           </div>
-          <span
-            href="http://google.com"
-            className="text text_type_main-default text_color_inactive"
-          >
+          <span className="text text_type_main-default text_color_inactive">
             Личный кабинет
           </span>
         </a>

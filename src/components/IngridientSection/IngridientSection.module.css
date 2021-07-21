@@ -1,0 +1,27 @@
+.productsList {
+  list-style-type: none;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  justify-content: space-between;
+  row-gap: 32px;
+}
+
+.productsItems {
+  position: relative;
+  width: 50%;
+}
+
+.productsPrice {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.productsImage {
+  text-align: center;
+}
+
+.productsDescription {
+  text-align: center;
+}
