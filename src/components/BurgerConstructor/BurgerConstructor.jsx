@@ -14,8 +14,8 @@ const BurgerConstructor = ({ data }) => {
   const totalPrice = data.reduce((acc, item) => acc + item.price, 0);
 
   return (
-    <section className={styles.section + " pt-25 pl-4"}>
-      <div className={styles.constructorContainer + " mb-10"}>
+    <section className={`${styles.section} pt-25 pl-4`}>
+      <div className="mb-10">
         <div className="mb-4 pl-8 pr-4">
           <ConstructorElement
             type="top"
@@ -23,9 +23,9 @@ const BurgerConstructor = ({ data }) => {
             text={`${bun.name} верх`}
             price={bun.price}
             thumbnail={bun.image}
-          ></ConstructorElement>
+          />
         </div>
-        <ul className={styles.productsList + " pr-4"}>
+        <ul className={`${styles.productsList} pr-4`}>
           {data.map((item) => {
             if (item.type === "bun") return null;
             return (
@@ -35,7 +35,7 @@ const BurgerConstructor = ({ data }) => {
                   text={item.name}
                   price={item.price}
                   thumbnail={item.image}
-                ></ConstructorElement>
+                />
               </li>
             );
           })}

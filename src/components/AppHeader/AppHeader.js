@@ -15,7 +15,7 @@ const AppHeader = () => {
         <li className="p-5">
           <a
             href="#"
-            className={styles.menuLink + " text text_type_main-default"}
+            className={`${styles.menuLink} text text_type_main-default`}
           >
             <div className="mr-2">
               <BurgerIcon type="primary" />
@@ -26,7 +26,7 @@ const AppHeader = () => {
         <li className="p-5">
           <a
             href="#"
-            className={styles.menuLink + " text text_type_main-default"}
+            className={`${styles.menuLink} text text_type_main-default`}
           >
             <div className="mr-2">
               <ListIcon type="secondary" />
@@ -38,16 +38,16 @@ const AppHeader = () => {
         </li>
       </ul>
 
-      <div className={styles.logo}>
+      <div>
         <Logo />
       </div>
       <div className="p-5">
         <a
           href="#"
-          className={styles.menuLink + " text text_type_main-default"}
+          className={`${styles.menuLink} text text_type_main-default`}
         >
           <div className="mr-2">
-            <ProfileIcon type="secondary"></ProfileIcon>
+            <ProfileIcon type="secondary" />
           </div>
           <span className="text text_type_main-default text_color_inactive">
             Личный кабинет

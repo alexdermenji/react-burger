@@ -5,18 +5,18 @@ import {
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-const IngridientSection = (props) => {
+const IngridientSection = ({ ingridients }) => {
   return (
     <div>
       <div className="mb-6">
-        <h2 className="text text_type_main-medium">{props.title}</h2>
+        <h2 className="text text_type_main-medium">{ingridients.title}</h2>
       </div>
       <ul className={styles.productsList + " pl-4 mb-10"}>
-        {props.ingridients.map((item) => {
+        {ingridients.map((item) => {
           return (
             <li className={styles.productsItems + " pl-4 pr-4"} key={item._id}>
               <div className={styles.productsImage + " mb-1"}>
-                <img src={item.image} alt="Bulka-1" />
+                <img src={item.image} alt={item.name} />
               </div>
               <Counter count={1} size="default" />
               <div className={styles.productsPrice + " mb-1"}>
