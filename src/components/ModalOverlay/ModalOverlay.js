@@ -1,5 +1,6 @@
 import styles from "./ModalOverlay.module.css";
 import Modal from "../Modal/Modal";
+import PropTypes from "prop-types";
 const ModalOverlay = (props) => {
   const content = props.children;
   return (
@@ -17,6 +18,12 @@ const ModalOverlay = (props) => {
       />
     </div>
   );
+};
+
+ModalOverlay.propTypes = {
+  handleCloseClick: PropTypes.func,
+  handleOrderClick: PropTypes.func,
+  title: PropTypes.string,
 };
 
 export default ModalOverlay;

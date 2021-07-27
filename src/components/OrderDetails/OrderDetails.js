@@ -2,6 +2,8 @@ import ModalOverlay from "../ModalOverlay/ModalOverlay";
 import styles from "./OrderDetails.module.css";
 import { CheckMarkIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import ReactDOM from "react-dom";
+import PropTypes from "prop-types";
+
 const OrderDetails = (props) => {
   return ReactDOM.createPortal(
     <ModalOverlay
@@ -26,6 +28,11 @@ const OrderDetails = (props) => {
     </ModalOverlay>,
     document.getElementById("modal-root")
   );
+};
+
+ModalOverlay.propTypes = {
+  handleCloseClick: PropTypes.func,
+  handleOrderClick: PropTypes.func,
 };
 
 export default OrderDetails;

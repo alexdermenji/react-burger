@@ -1,6 +1,8 @@
 import ModalOverlay from "../ModalOverlay/ModalOverlay";
 import styles from "./IngridientDetails.module.css";
 import ReactDOM from "react-dom";
+import PropTypes from "prop-types";
+
 const IngridientDetails = ({ data, handleCloseClick }) => {
   return ReactDOM.createPortal(
     <ModalOverlay
@@ -34,6 +36,11 @@ const IngridientDetails = ({ data, handleCloseClick }) => {
     </ModalOverlay>,
     document.getElementById("modal-root")
   );
+};
+
+ModalOverlay.propTypes = {
+  data: PropTypes.object,
+  handleCloseClick: PropTypes.func,
 };
 
 export default IngridientDetails;
