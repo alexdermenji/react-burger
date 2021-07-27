@@ -6,10 +6,10 @@ import PropTypes from "prop-types";
 import { tabs } from "../../utils/tabs";
 import IngridientSection from "../IngridientSection/IngridientSection";
 
-const BurgerIngridients = ({ data }) => {
+const BurgerIngridients = ({ data, handleItemClick }) => {
   const [current, setCurrent] = React.useState(tabs[0].title);
   return (
-    <section className={styles.section}>
+    <section className={`${styles.section} pt-10`}>
       <h1 className="text text_type_main-large">Соберите бургер</h1>
       <div className="mt-5 mb-10">
         <ul className={styles.tabsList}>
@@ -31,6 +31,7 @@ const BurgerIngridients = ({ data }) => {
       <div className={styles.ingridientsContainer}>
         {tabs.map((tab) => (
           <IngridientSection
+            handleItemClick={handleItemClick}
             key={tab.title}
             title={tab.title}
             ingridients={data.filter((item) => item.type === tab.id)}

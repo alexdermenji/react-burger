@@ -8,6 +8,7 @@
 }
 
 .productsItems {
+  cursor: pointer;
   position: relative;
   width: 50%;
 }

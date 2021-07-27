@@ -1,5 +1,5 @@
 import React from "react";
-
+import { useState } from "react";
 import {
   ConstructorElement,
   CurrencyIcon,
@@ -9,7 +9,7 @@ import {
 import styles from "./BurgerConstructor.module.css";
 import PropTypes from "prop-types";
 
-const BurgerConstructor = ({ data }) => {
+const BurgerConstructor = ({ data, handleOrderClick }) => {
   const bun = data.find((item) => (item.type = "bun"));
   const totalPrice = data.reduce((acc, item) => acc + item.price, 0);
 
@@ -57,7 +57,7 @@ const BurgerConstructor = ({ data }) => {
           </span>
           <CurrencyIcon type="primary" />
         </div>
-        <Button type="primary" size="medium">
+        <Button type="primary" size="medium" onClick={handleOrderClick}>
           Оформить заказ
         </Button>
       </div>
@@ -65,6 +65,9 @@ const BurgerConstructor = ({ data }) => {
   );
 };
 
-BurgerConstructor.propTypes = { data: PropTypes.arrayOf(PropTypes.object) };
+BurgerConstructor.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.object),
+  handleOrderClick: PropTypes.func,
+};
 
 export default BurgerConstructor;
