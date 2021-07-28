@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import { tabs } from "../../utils/tabs";
 import IngridientSection from "../IngridientSection/IngridientSection";
 
-const BurgerIngridients = ({ data, handleItemClick }) => {
+const BurgerIngridients = ({ data, onClick }) => {
   const [current, setCurrent] = React.useState(tabs[0].title);
   return (
     <section className={`${styles.section} pt-10`}>
@@ -31,7 +31,7 @@ const BurgerIngridients = ({ data, handleItemClick }) => {
       <div className={styles.ingridientsContainer}>
         {tabs.map((tab) => (
           <IngridientSection
-            handleItemClick={handleItemClick}
+            onClick={onClick}
             key={tab.title}
             title={tab.title}
             ingridients={data.filter((item) => item.type === tab.id)}
@@ -42,6 +42,9 @@ const BurgerIngridients = ({ data, handleItemClick }) => {
   );
 };
 
-BurgerIngridients.propTypes = { data: PropTypes.arrayOf(PropTypes.object) };
+BurgerIngridients.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.object),
+  onClick: PropTypes.func,
+};
 
 export default BurgerIngridients;

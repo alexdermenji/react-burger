@@ -3,39 +3,39 @@ import styles from "./App.module.css";
 import AppHeader from "../AppHeader/AppHeader";
 import BurgerIngridients from "../BurgerIngridients/BurgerIngridients";
 import BurgerConstructor from "../BurgerConstructor/BurgerConstructor";
+import { url } from "../../utils/api";
+import Modal from "../Modal/Modal";
 import OrderDetails from "../OrderDetails/OrderDetails";
 import IngridientDetails from "../IngridientDetails/IngridientDetails";
-import { url } from "../../utils/api";
 
 const App = () => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [modalOrderIsOpen, toggleOrderModal] = useState(false);
-  const [itemModalIsOpen, toggleItemModal] = useState(false);
-  const [cardData, setCardData] = useState({});
+  const [showOrderModal, setShowOrderModal] = useState(false);
+  const [showProductCard, setShowProductCard] = useState(false);
+  const [productCardData, setProductCardData] = useState({});
 
-  const handleOrderClick = () => {
-    toggleOrderModal(!modalOrderIsOpen);
+  const handleShowModal = () => {
+    setShowOrderModal(true);
   };
 
-  const handleItemClick = (item) => {
-    toggleItemModal(!itemModalIsOpen);
-    setCardData(item);
+  const handleShowProductCard = (item) => {
+    setShowProductCard(true);
+    setProductCardData(item);
   };
 
-  const handleCloseClick = () => {
-    toggleOrderModal(false);
-    toggleItemModal(false);
+  const handleHideModal = () => {
+    setShowOrderModal(false);
+    setShowProductCard(false);
   };
 
-  const escPressHandler = (e) => {
-    if (e.code === "Escape") {
-      toggleOrderModal(false);
-      toggleItemModal(false);
-    }
-  };
   useEffect(() => {
+    const escPressHandler = (e) => {
+      if (e.code === "Escape") {
+        handleHideModal();
+      }
+    };
     window.addEventListener("keydown", escPressHandler);
     return () => window.removeEventListener("keydown", escPressHandler);
   }, []);
@@ -43,7 +43,10 @@ const App = () => {
   useEffect(() => {
     fetch(url)
       .then((res) => {
-        return res.json();
+        if (res.ok) {
+          return res.json();
+        }
+        return Promise.reject(new Error("Ошибка"));
       })
       .then((data) => {
         setData(data.data);
@@ -59,19 +62,15 @@ const App = () => {
       <header>
         <AppHeader />
       </header>
-
-      {modalOrderIsOpen && (
-        <OrderDetails
-          handleOrderClick={handleOrderClick}
-          handleCloseClick={handleCloseClick}
-        />
+      {showOrderModal && (
+        <Modal onClick={handleHideModal}>
+          <OrderDetails></OrderDetails>
+        </Modal>
       )}
-      {itemModalIsOpen && (
-        <IngridientDetails
-          data={cardData}
-          handleItemClick={handleItemClick}
-          handleCloseClick={handleCloseClick}
-        />
+      {showProductCard && (
+        <Modal onClick={handleHideModal} title="Детали ингридиента">
+          <IngridientDetails data={productCardData}></IngridientDetails>
+        </Modal>
       )}
 
       <main className={`${styles.main} pt-10 pb-10`}>
@@ -80,10 +79,10 @@ const App = () => {
         )}
         {error && <div className="text text_type_main-large">{error}</div>}
         {data && (
-          <BurgerIngridients handleItemClick={handleItemClick} data={data} />
-        )}
-        {data && (
-          <BurgerConstructor handleOrderClick={handleOrderClick} data={data} />
+          <>
+            <BurgerIngridients onClick={handleShowProductCard} data={data} />
+            <BurgerConstructor onClick={handleShowModal} data={data} />
+          </>
         )}
       </main>
     </div>

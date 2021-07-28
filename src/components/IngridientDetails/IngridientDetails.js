@@ -1,14 +1,9 @@
-import ModalOverlay from "../ModalOverlay/ModalOverlay";
 import styles from "./IngridientDetails.module.css";
-import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 
-const IngridientDetails = ({ data, handleCloseClick }) => {
-  return ReactDOM.createPortal(
-    <ModalOverlay
-      title={"Детали Ингридиента"}
-      handleCloseClick={handleCloseClick}
-    >
+const IngridientDetails = ({ data }) => {
+  return (
+    <>
       <div className="mb-4">
         <img src={data.image_large} alt="" />
       </div>
@@ -33,14 +28,11 @@ const IngridientDetails = ({ data, handleCloseClick }) => {
           <div>{data.carbohydrates}</div>
         </li>
       </ul>
-    </ModalOverlay>,
-    document.getElementById("modal-root")
+    </>
   );
 };
 
-ModalOverlay.propTypes = {
-  data: PropTypes.object,
-  handleCloseClick: PropTypes.func,
+IngridientDetails.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.object),
 };
-
 export default IngridientDetails;

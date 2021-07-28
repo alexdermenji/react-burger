@@ -24,6 +24,7 @@
   background-color: transparent;
   border: 0;
   cursor: pointer;
+  margin-left: auto;
 }
 
 .content {

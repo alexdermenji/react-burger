@@ -5,7 +5,7 @@ import {
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-const IngridientSection = ({ ingridients, title, handleItemClick }) => {
+const IngridientSection = ({ ingridients, title, onClick }) => {
   return (
     <div>
       <div className="mb-6">
@@ -16,7 +16,7 @@ const IngridientSection = ({ ingridients, title, handleItemClick }) => {
           return (
             <li
               onClick={() => {
-                handleItemClick(item);
+                onClick(item);
               }}
               className={styles.productsItems + " pl-4 pr-4"}
               key={item._id}
@@ -49,6 +49,7 @@ const IngridientSection = ({ ingridients, title, handleItemClick }) => {
 IngridientSection.propTypes = {
   title: PropTypes.string,
   ingridients: PropTypes.arrayOf(PropTypes.object),
+  onClick: PropTypes.func,
 };
 
 export default IngridientSection;
