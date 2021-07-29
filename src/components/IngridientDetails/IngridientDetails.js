@@ -1,5 +1,6 @@
 import styles from "./IngridientDetails.module.css";
 import PropTypes from "prop-types";
+import menuItemPropTypes from "../../utils/constants";
 
 const IngridientDetails = ({ data }) => {
   return (
@@ -33,6 +34,6 @@ const IngridientDetails = ({ data }) => {
 };
 
 IngridientDetails.propTypes = {
-  data: PropTypes.object,
+  data: PropTypes.arrayOf(menuItemPropTypes).isRequired,
 };
 export default IngridientDetails;

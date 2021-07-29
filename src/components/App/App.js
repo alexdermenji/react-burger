@@ -16,13 +16,13 @@ const App = () => {
   const [showProductCard, setShowProductCard] = useState(false);
   const [productCardData, setProductCardData] = useState({});
 
-  const handleOpenModal = (e, item) => {
-    if (item) {
-      setShowProductCard(true);
-      setProductCardData(item);
-    } else {
-      setShowOrderModal(true);
-    }
+  const handleOpenOrderDetails = () => {
+    setShowOrderModal(true);
+  };
+
+  const handleOpenIngridientDetails = (item) => {
+    setShowProductCard(true);
+    setProductCardData(item);
   };
 
   const handleHideModal = () => {
@@ -80,8 +80,14 @@ const App = () => {
         {error && <div className="text text_type_main-large">{error}</div>}
         {data && (
           <>
-            <BurgerIngridients openModal={handleOpenModal} data={data} />
-            <BurgerConstructor openModal={handleOpenModal} data={data} />
+            <BurgerIngridients
+              handleOpenIngridientDetails={handleOpenIngridientDetails}
+              data={data}
+            />
+            <BurgerConstructor
+              handleOpenOrderDetails={handleOpenOrderDetails}
+              data={data}
+            />
           </>
         )}
       </main>

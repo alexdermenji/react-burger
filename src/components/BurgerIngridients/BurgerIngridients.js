@@ -3,10 +3,11 @@ import React from "react";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./BurgerIngridients.module.css";
 import PropTypes from "prop-types";
+import menuItemPropTypes from "../../utils/constants";
 import { tabs } from "../../utils/tabs";
 import IngridientSection from "../IngridientSection/IngridientSection";
 
-const BurgerIngridients = ({ data, openModal }) => {
+const BurgerIngridients = ({ data, handleOpenIngridientDetails }) => {
   const [current, setCurrent] = React.useState(tabs[0].title);
   return (
     <section className={`${styles.section} pt-10`}>
@@ -31,7 +32,7 @@ const BurgerIngridients = ({ data, openModal }) => {
       <div className={styles.ingridientsContainer}>
         {tabs.map((tab) => (
           <IngridientSection
-            openModal={openModal}
+            handleOpenIngridientDetails={handleOpenIngridientDetails}
             key={tab.title}
             title={tab.title}
             ingridients={data.filter((item) => item.type === tab.id)}
@@ -43,8 +44,8 @@ const BurgerIngridients = ({ data, openModal }) => {
 };
 
 BurgerIngridients.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.object),
-  openModal: PropTypes.func,
+  data: PropTypes.arrayOf(menuItemPropTypes).isRequired,
+  handleOpenIngridientDetails: PropTypes.func.isRequired,
 };
 
 export default BurgerIngridients;

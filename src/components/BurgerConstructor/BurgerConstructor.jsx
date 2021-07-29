@@ -7,8 +7,9 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./BurgerConstructor.module.css";
 import PropTypes from "prop-types";
+import menuItemPropTypes from "../../utils/constants";
 
-const BurgerConstructor = ({ data, openModal }) => {
+const BurgerConstructor = ({ data, handleOpenOrderDetails }) => {
   const bun = data.find((item) => (item.type = "bun"));
   const totalPrice = data.reduce((acc, item) => acc + item.price, 0);
 
@@ -56,7 +57,7 @@ const BurgerConstructor = ({ data, openModal }) => {
           </span>
           <CurrencyIcon type="primary" />
         </div>
-        <Button type="primary" size="medium" onClick={openModal}>
+        <Button type="primary" size="medium" onClick={handleOpenOrderDetails}>
           Оформить заказ
         </Button>
       </div>
@@ -65,8 +66,8 @@ const BurgerConstructor = ({ data, openModal }) => {
 };
 
 BurgerConstructor.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.object),
-  openModal: PropTypes.func,
+  data: PropTypes.arrayOf(menuItemPropTypes).isRequired,
+  handleOpenOrderDetails: PropTypes.func.isRequired,
 };
 
 export default BurgerConstructor;

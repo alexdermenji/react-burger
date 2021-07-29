@@ -1,11 +1,16 @@
 import styles from "./IngridientSection.module.css";
 import PropTypes from "prop-types";
+import menuItemPropTypes from "../../utils/constants";
 import {
   Counter,
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-const IngridientSection = ({ ingridients, title, openModal }) => {
+const IngridientSection = ({
+  ingridients,
+  title,
+  handleOpenIngridientDetails,
+}) => {
   return (
     <div>
       <div className="mb-6">
@@ -15,8 +20,8 @@ const IngridientSection = ({ ingridients, title, openModal }) => {
         {ingridients.map((item) => {
           return (
             <li
-              onClick={(e) => {
-                openModal(e, item);
+              onClick={() => {
+                handleOpenIngridientDetails(item);
               }}
               className={styles.productsItems + " pl-4 pr-4"}
               key={item._id}
@@ -47,9 +52,9 @@ const IngridientSection = ({ ingridients, title, openModal }) => {
 };
 
 IngridientSection.propTypes = {
-  title: PropTypes.string,
-  ingridients: PropTypes.arrayOf(PropTypes.object),
-  openModal: PropTypes.func,
+  title: PropTypes.string.isRequired,
+  ingridients: PropTypes.arrayOf(menuItemPropTypes).isRequired,
+  handleOpenIngridientDetails: PropTypes.func.isRequired,
 };
 
 export default IngridientSection;

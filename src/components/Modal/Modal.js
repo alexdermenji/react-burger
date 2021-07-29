@@ -29,9 +29,9 @@ const Modal = ({ onClick, children, title }) => {
 };
 
 Modal.propTypes = {
-  title: PropTypes.string,
-  children: PropTypes.any,
-  onClick: PropTypes.func,
+  title: PropTypes.string.isRequired,
+  children: PropTypes.any.isRequired,
+  onClick: PropTypes.func.isRequired,
 };
 
 export default Modal;
