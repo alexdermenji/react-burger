@@ -8,7 +8,7 @@ import {
 import styles from "./BurgerConstructor.module.css";
 import PropTypes from "prop-types";
 
-const BurgerConstructor = ({ data, onClick }) => {
+const BurgerConstructor = ({ data, openModal }) => {
   const bun = data.find((item) => (item.type = "bun"));
   const totalPrice = data.reduce((acc, item) => acc + item.price, 0);
 
@@ -56,7 +56,7 @@ const BurgerConstructor = ({ data, onClick }) => {
           </span>
           <CurrencyIcon type="primary" />
         </div>
-        <Button type="primary" size="medium" onClick={onClick}>
+        <Button type="primary" size="medium" onClick={openModal}>
           Оформить заказ
         </Button>
       </div>
@@ -66,7 +66,7 @@ const BurgerConstructor = ({ data, onClick }) => {
 
 BurgerConstructor.propTypes = {
   data: PropTypes.arrayOf(PropTypes.object),
-  onClick: PropTypes.func,
+  openModal: PropTypes.func,
 };
 
 export default BurgerConstructor;

@@ -33,6 +33,6 @@ const IngridientDetails = ({ data }) => {
 };
 
 IngridientDetails.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.object),
+  data: PropTypes.object,
 };
 export default IngridientDetails;
