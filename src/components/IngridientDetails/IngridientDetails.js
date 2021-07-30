@@ -34,6 +34,6 @@ const IngridientDetails = ({ data }) => {
 };
 
 IngridientDetails.propTypes = {
-  data: PropTypes.arrayOf(menuItemPropTypes).isRequired,
+  data: PropTypes.shape({ menuItemPropTypes }).isRequired,
 };
 export default IngridientDetails;
