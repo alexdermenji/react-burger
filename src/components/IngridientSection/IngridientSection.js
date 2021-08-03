@@ -12,7 +12,7 @@ const IngridientSection = ({
   handleOpenIngridientDetails,
 }) => {
   return (
-    <div>
+    <>
       <div className="mb-6">
         <h2 className="text text_type_main-medium">{title}</h2>
       </div>
@@ -47,7 +47,7 @@ const IngridientSection = ({
           );
         })}
       </ul>
-    </div>
+    </>
   );
 };
 
