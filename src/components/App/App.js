@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, createContext } from "react";
 import styles from "./App.module.css";
 import AppHeader from "../AppHeader/AppHeader";
 import BurgerIngridients from "../BurgerIngridients/BurgerIngridients";
 import BurgerConstructor from "../BurgerConstructor/BurgerConstructor";
 import { url } from "../../utils/api";
+
+export const ingridientContext = createContext([]);
 
 const App = () => {
   const [data, setData] = useState(null);
@@ -39,10 +41,10 @@ const App = () => {
         )}
         {error && <div className="text text_type_main-large">{error}</div>}
         {data && (
-          <>
+          <ingridientContext.Provider value={data}>
             <BurgerIngridients data={data} />
-            <BurgerConstructor data={data} />
-          </>
+            <BurgerConstructor />
+          </ingridientContext.Provider>
         )}
       </main>
     </div>

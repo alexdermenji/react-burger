@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   ConstructorElement,
   CurrencyIcon,
@@ -6,16 +6,46 @@ import {
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./BurgerConstructor.module.css";
-import PropTypes from "prop-types";
-import menuItemPropTypes from "../../utils/constants";
 import OrderDetails from "../OrderDetails/OrderDetails";
 import ModalOverlay from "../ModalOverlay/ModalOverlay";
+import { ingridientContext } from "../App/App";
 
-const BurgerConstructor = ({ data }) => {
+const BurgerConstructor = () => {
+  const data = useContext(ingridientContext);
+  console.log(data);
   const bun = data.find((item) => (item.type = "bun"));
+
   const totalPrice = data.reduce((acc, item) => acc + item.price, 0);
 
-  const [modalOpened, setModalOpened] = useState(false);
+  const [orderNumber, setOrderNumber] = useState(null);
+
+  const handleCloseModal = () => {
+    setOrderNumber(null);
+  };
+
+  const handleOpenModal = (data) => {
+    setOrderNumber(data);
+  };
+
+  const sendOrder = () => {
+    fetch("https://norma.nomoreparties.space/api/orders/", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        ingredients: data,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        handleOpenModal(data.order.number);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   useEffect(() => {
     const escPressHandler = (e) => {
       if (e.code === "Escape") {
@@ -26,19 +56,11 @@ const BurgerConstructor = ({ data }) => {
     return () => window.removeEventListener("keydown", escPressHandler);
   }, []);
 
-  const handleCloseModal = () => {
-    setModalOpened(false);
-  };
-
-  const handleOpenModal = () => {
-    setModalOpened(true);
-  };
-
   return (
     <section className={`${styles.section} pt-25 pl-4`}>
-      {modalOpened && (
+      {orderNumber && (
         <ModalOverlay onClose={handleCloseModal}>
-          <OrderDetails></OrderDetails>
+          <OrderDetails orderNumber={orderNumber}></OrderDetails>
         </ModalOverlay>
       )}
       <div className="mb-10">
@@ -83,16 +105,11 @@ const BurgerConstructor = ({ data }) => {
           </span>
           <CurrencyIcon type="primary" />
         </div>
-        <Button type="primary" size="medium" onClick={handleOpenModal}>
+        <Button type="primary" size="medium" onClick={sendOrder}>
           Оформить заказ
         </Button>
       </div>
     </section>
   );
 };
-
-BurgerConstructor.propTypes = {
-  data: PropTypes.arrayOf(menuItemPropTypes).isRequired,
-};
-
 export default BurgerConstructor;
