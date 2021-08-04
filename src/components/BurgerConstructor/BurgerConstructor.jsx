@@ -10,9 +10,9 @@ import OrderDetails from "../OrderDetails/OrderDetails";
 import ModalOverlay from "../ModalOverlay/ModalOverlay";
 import { ingridientContext } from "../App/App";
 
-const BurgerConstructor = () => {
+const BurgerConstructor = ({ setIsLoading }) => {
   const data = useContext(ingridientContext);
-  console.log(data);
+
   const bun = data.find((item) => (item.type = "bun"));
 
   const totalPrice = data.reduce((acc, item) => acc + item.price, 0);
@@ -28,6 +28,7 @@ const BurgerConstructor = () => {
   };
 
   const sendOrder = () => {
+    setIsLoading(true);
     fetch("https://norma.nomoreparties.space/api/orders/", {
       method: "POST",
       headers: {
@@ -37,7 +38,13 @@ const BurgerConstructor = () => {
         ingredients: data,
       }),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.ok) {
+          setIsLoading(false);
+          return response.json();
+        }
+        throw new Error(response.status);
+      })
       .then((data) => {
         handleOpenModal(data.order.number);
       })

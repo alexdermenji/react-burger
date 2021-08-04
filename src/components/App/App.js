@@ -6,7 +6,6 @@ import BurgerConstructor from "../BurgerConstructor/BurgerConstructor";
 import { url } from "../../utils/api";
 
 export const ingridientContext = createContext([]);
-
 const App = () => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -35,15 +34,13 @@ const App = () => {
         <AppHeader />
       </header>
 
+      {isLoading && <div className="text text_type_main-large">Loading...</div>}
       <main className={`${styles.main} pt-10 pb-10`}>
-        {isLoading && (
-          <div className="text text_type_main-large">Loading...</div>
-        )}
         {error && <div className="text text_type_main-large">{error}</div>}
         {data && (
           <ingridientContext.Provider value={data}>
-            <BurgerIngridients data={data} />
-            <BurgerConstructor />
+            <BurgerIngridients />
+            <BurgerConstructor setIsLoading={setIsLoading} />
           </ingridientContext.Provider>
         )}
       </main>
