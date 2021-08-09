@@ -4,9 +4,12 @@ import AppHeader from "../AppHeader/AppHeader";
 import BurgerIngridients from "../BurgerIngridients/BurgerIngridients";
 import BurgerConstructor from "../BurgerConstructor/BurgerConstructor";
 import { url } from "../../utils/api";
+import { useSelector } from "react-redux";
 
 export const ingridientContext = createContext([]);
 const App = () => {
+  const state = useSelector((state) => state.rootReducer);
+  console.log(state);
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -30,10 +33,7 @@ const App = () => {
   }, []);
   return (
     <div className={styles.container}>
-      <header>
-        <AppHeader />
-      </header>
-
+      <AppHeader />
       {isLoading && <div className="text text_type_main-large">Loading...</div>}
       <main className={`${styles.main} pt-10 pb-10`}>
         {error && <div className="text text_type_main-large">{error}</div>}

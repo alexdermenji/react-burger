@@ -43,7 +43,7 @@ const BurgerIngridients = () => {
         <ul className={styles.tabsList}>
           {tabs.map((tab) => {
             return (
-              <li key={tab.id}>
+              <li key={tab.id} className={styles.tabsItem}>
                 <Tab
                   value={tab.title}
                   active={current === `${tab.title}`}
