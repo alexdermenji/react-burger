@@ -1,6 +1,6 @@
 import styles from "./IngridientDetails.module.css";
 import PropTypes from "prop-types";
-import menuItemPropTypes from "../../utils/constants";
+import menuItemPropTypes from "../../utils/types";
 
 const IngridientDetails = ({ data }) => {
   return (

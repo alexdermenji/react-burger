@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import PropTypes from "prop-types";
 import {
   ConstructorElement,
   CurrencyIcon,
@@ -7,7 +8,7 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./BurgerConstructor.module.css";
 import OrderDetails from "../OrderDetails/OrderDetails";
-import ModalOverlay from "../ModalOverlay/ModalOverlay";
+import Modal from "../Modal/Modal";
 import { ingridientContext } from "../App/App";
 
 const BurgerConstructor = ({ setIsLoading }) => {
@@ -66,9 +67,9 @@ const BurgerConstructor = ({ setIsLoading }) => {
   return (
     <section className={`${styles.section} pt-25 pl-4`}>
       {orderNumber && (
-        <ModalOverlay onClose={handleCloseModal}>
+        <Modal onClose={handleCloseModal}>
           <OrderDetails orderNumber={orderNumber}></OrderDetails>
-        </ModalOverlay>
+        </Modal>
       )}
       <div className="mb-10">
         <div className="mb-4 pl-8 pr-4">
@@ -118,5 +119,9 @@ const BurgerConstructor = ({ setIsLoading }) => {
       </div>
     </section>
   );
+};
+
+BurgerConstructor.propTypes = {
+  setIsLoading: PropTypes.func.isRequired,
 };
 export default BurgerConstructor;

@@ -4,7 +4,7 @@ import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./BurgerIngridients.module.css";
 import { tabs } from "../../utils/tabs";
 import IngridientSection from "../IngridientSection/IngridientSection";
-import ModalOverlay from "../ModalOverlay/ModalOverlay";
+import Modal from "../Modal/Modal";
 import IngridientDetails from "../IngridientDetails/IngridientDetails";
 import { ingridientContext } from "../App/App";
 
@@ -34,9 +34,9 @@ const BurgerIngridients = () => {
   return (
     <section className={`${styles.section} pt-10`}>
       {modalData && (
-        <ModalOverlay onClose={handleCloseModal} title="Детали ингридиента">
+        <Modal onClose={handleCloseModal} title="Детали ингридиента">
           <IngridientDetails data={modalData}></IngridientDetails>
-        </ModalOverlay>
+        </Modal>
       )}
       <h1 className="text text_type_main-large">Соберите бургер</h1>
       <div className="mt-5 mb-10">
