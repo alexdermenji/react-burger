@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
-import PropTypes from "prop-types";
+import React, { useCallback, useEffect } from "react";
 import {
   ConstructorElement,
   CurrencyIcon,
@@ -9,49 +8,26 @@ import {
 import styles from "./BurgerConstructor.module.css";
 import OrderDetails from "../OrderDetails/OrderDetails";
 import Modal from "../Modal/Modal";
-import { ingridientContext } from "../App/App";
+import { useDispatch, useSelector } from "react-redux";
+import selectIngridients from "../../services/selectors/ingridients/selectIngridients";
+import selectNumber from "../../services/selectors/orders/selectNumber";
+import { sendOrder } from "../../services/actions/order/sendOrder";
+import { closeOrder } from "../../services/actions/order/closeOrder";
+const BurgerConstructor = () => {
+  const dispatch = useDispatch();
+  const ingridients = useSelector(selectIngridients);
+  const orderNumber = useSelector(selectNumber);
 
-const BurgerConstructor = ({ setIsLoading }) => {
-  const data = useContext(ingridientContext);
+  const bun = ingridients.find((item) => (item.type = "bun"));
 
-  const bun = data.find((item) => (item.type = "bun"));
+  const totalPrice = ingridients.reduce((acc, item) => acc + item.price, 0);
 
-  const totalPrice = data.reduce((acc, item) => acc + item.price, 0);
+  const handleCloseModal = useCallback(() => {
+    dispatch(closeOrder());
+  }, [dispatch]);
 
-  const [orderNumber, setOrderNumber] = useState(null);
-
-  const handleCloseModal = () => {
-    setOrderNumber(null);
-  };
-
-  const handleOpenModal = (data) => {
-    setOrderNumber(data);
-  };
-
-  const sendOrder = () => {
-    setIsLoading(true);
-    fetch("https://norma.nomoreparties.space/api/orders/", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        ingredients: data,
-      }),
-    })
-      .then((response) => {
-        if (response.ok) {
-          setIsLoading(false);
-          return response.json();
-        }
-        throw new Error(response.status);
-      })
-      .then((data) => {
-        handleOpenModal(data.order.number);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const sendOrderClick = () => {
+    dispatch(sendOrder(ingridients));
   };
 
   useEffect(() => {
@@ -62,7 +38,7 @@ const BurgerConstructor = ({ setIsLoading }) => {
     };
     window.addEventListener("keydown", escPressHandler);
     return () => window.removeEventListener("keydown", escPressHandler);
-  }, []);
+  }, [handleCloseModal]);
 
   return (
     <section className={`${styles.section} pt-25 pl-4`}>
@@ -82,7 +58,7 @@ const BurgerConstructor = ({ setIsLoading }) => {
           />
         </div>
         <ul className={`${styles.productsList} pr-4`}>
-          {data.map((item) => {
+          {ingridients.map((item) => {
             if (item.type === "bun") return null;
             return (
               <li key={item._id} className={styles.productsItem}>
@@ -113,7 +89,7 @@ const BurgerConstructor = ({ setIsLoading }) => {
           </span>
           <CurrencyIcon type="primary" />
         </div>
-        <Button type="primary" size="medium" onClick={sendOrder}>
+        <Button type="primary" size="medium" onClick={sendOrderClick}>
           Оформить заказ
         </Button>
       </div>
@@ -121,7 +97,4 @@ const BurgerConstructor = ({ setIsLoading }) => {
   );
 };
 
-BurgerConstructor.propTypes = {
-  setIsLoading: PropTypes.func.isRequired,
-};
 export default BurgerConstructor;

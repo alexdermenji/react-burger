@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./BurgerIngridients.module.css";
@@ -6,20 +6,20 @@ import { tabs } from "../../utils/tabs";
 import IngridientSection from "../IngridientSection/IngridientSection";
 import Modal from "../Modal/Modal";
 import IngridientDetails from "../IngridientDetails/IngridientDetails";
-import { ingridientContext } from "../App/App";
-
+import selectCurrentIngridient from "../../services/selectors/ingridients/selectCurrentIngridient";
+import { useSelector, useDispatch } from "react-redux";
+import { setCurrentIngridient } from "../../services/actions/ingridients/setCurrentIngridient";
+import selectIngridients from "../../services/selectors/ingridients/selectIngridients";
 const BurgerIngridients = () => {
-  const data = useContext(ingridientContext);
+  const dispatch = useDispatch();
   const [current, setCurrent] = useState(tabs[0].title);
-  const [modalData, setModalData] = useState(null);
 
-  const handleOpenModal = (data) => {
-    setModalData(data);
-  };
+  const ingridients = useSelector(selectIngridients);
+  const currentIngridient = useSelector(selectCurrentIngridient);
 
-  const handleCloseModal = () => {
-    setModalData(null);
-  };
+  const handleCloseModal = useCallback(() => {
+    dispatch(setCurrentIngridient(null));
+  }, [dispatch]);
 
   useEffect(() => {
     const escPressHandler = (e) => {
@@ -29,13 +29,13 @@ const BurgerIngridients = () => {
     };
     window.addEventListener("keydown", escPressHandler);
     return () => window.removeEventListener("keydown", escPressHandler);
-  }, []);
+  }, [handleCloseModal]);
 
   return (
     <section className={`${styles.section} pt-10`}>
-      {modalData && (
+      {currentIngridient && (
         <Modal onClose={handleCloseModal} title="Детали ингридиента">
-          <IngridientDetails data={modalData}></IngridientDetails>
+          <IngridientDetails></IngridientDetails>
         </Modal>
       )}
       <h1 className="text text_type_main-large">Соберите бургер</h1>
@@ -59,10 +59,9 @@ const BurgerIngridients = () => {
       <div className={styles.ingridientsContainer}>
         {tabs.map((tab) => (
           <IngridientSection
-            handleOpenIngridientDetails={handleOpenModal}
             key={tab.title}
             title={tab.title}
-            ingridients={data.filter((item) => item.type === tab.id)}
+            ingridients={ingridients.filter((item) => item.type === tab.id)}
           />
         ))}
       </div>

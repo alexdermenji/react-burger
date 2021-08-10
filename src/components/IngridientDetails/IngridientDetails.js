@@ -1,8 +1,9 @@
 import styles from "./IngridientDetails.module.css";
-import PropTypes from "prop-types";
-import menuItemPropTypes from "../../utils/types";
+import { useSelector } from "react-redux";
+import selectCurrentIngridient from "../../services/selectors/ingridients/selectCurrentIngridient";
 
-const IngridientDetails = ({ data }) => {
+const IngridientDetails = () => {
+  const data = useSelector(selectCurrentIngridient);
   return (
     <>
       <div className="mb-4">
@@ -33,7 +34,4 @@ const IngridientDetails = ({ data }) => {
   );
 };
 
-IngridientDetails.propTypes = {
-  data: PropTypes.shape({ menuItemPropTypes }).isRequired,
-};
 export default IngridientDetails;

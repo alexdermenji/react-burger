@@ -1,9 +1,10 @@
 import { combineReducers } from "redux";
-import { rootReducer, secondReducer } from "./rootReducer";
+import { ingridientsReducer } from "./ingridients";
+import { orderReducer } from "./order";
 
 const reducers = combineReducers({
-  rootReducer,
-  secondReducer,
+  ingridients: ingridientsReducer,
+  order: orderReducer,
 });
 
 export default reducers;
