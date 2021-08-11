@@ -8,7 +8,8 @@ import { getIngridients } from "../../services/actions/ingridients/getIngridient
 import selectIngridients from "../../services/selectors/ingridients/selectIngridients";
 import selectIngridientsLoading from "../../services/selectors/ingridients/selectIngridientsLoading";
 import selectIngridientsError from "../../services/selectors/ingridients/selectIngridientsError";
-
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 const App = () => {
   const dispatch = useDispatch();
 
@@ -21,25 +22,27 @@ const App = () => {
   }, [dispatch]);
 
   return (
-    <div className={styles.container}>
-      <AppHeader />
-      {ingridientsLoading && (
-        <div className="text text_type_main-large">Loading...</div>
-      )}
-      {ingridientsLoadingError && (
-        <div className="text text_type_main-large">
-          {ingridientsLoadingError}
-        </div>
-      )}
-      <main className={`${styles.main} pt-10 pb-10`}>
-        {ingridients && (
-          <>
-            <BurgerIngridients />
-            <BurgerConstructor />
-          </>
+    <DndProvider backend={HTML5Backend}>
+      <div className={styles.container}>
+        <AppHeader />
+        {ingridientsLoading && (
+          <div className="text text_type_main-large">Loading...</div>
         )}
-      </main>
-    </div>
+        {ingridientsLoadingError && (
+          <div className="text text_type_main-large">
+            {ingridientsLoadingError}
+          </div>
+        )}
+        <main className={`${styles.main} pt-10 pb-10`}>
+          {ingridients && (
+            <>
+              <BurgerIngridients />
+              <BurgerConstructor />
+            </>
+          )}
+        </main>
+      </div>
+    </DndProvider>
   );
 };
 
