@@ -33,14 +33,25 @@ const BurgerIngridients = () => {
 
   useEffect(() => {
     const container = document.getElementById("container");
+    const containerHeight = container.offsetHeight;
+
+    tabs.map((tab) => {
+      const height = document.getElementById(tab.id).offsetHeight;
+      tab.height = height;
+      return tab;
+    });
 
     function changeTabOnScroll() {
-      if (container.scrollTop <= 320) {
-        setCurrent("Булки");
-      } else if (container.scrollTop > 320 && container.scrollTop < 900) {
-        setCurrent("Соусы");
-      } else if (container.scrollTop >= 900) {
-        setCurrent("Начинки");
+      console.log(container.scrollTop);
+      if (container.scrollTop <= tabs[0].height) {
+        setCurrent(tabs[0].title);
+      } else if (
+        container.scrollTop > tabs[0].height &&
+        container.scrollTop < containerHeight - tabs[0].height
+      ) {
+        setCurrent(tabs[1].title);
+      } else if (container.scrollTop >= tabs[0].height + tabs[1].height) {
+        setCurrent(tabs[2].title);
       }
     }
 
@@ -84,6 +95,7 @@ const BurgerIngridients = () => {
             key={tab.title}
             title={tab.title}
             ingridients={ingridients.filter((item) => item.type === tab.id)}
+            id={tab.id}
           />
         ))}
       </div>

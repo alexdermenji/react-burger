@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCurrentIngridient } from "../../services/actions/ingridients/setCurrentIngridient";
 import { useDrag } from "react-dnd";
 import selectIngridientCount from "../../services/selectors/ingridients/selectIngridientCount";
-import React from "react";
+import React, { useRef } from "react";
 
 const Ingridient = ({ item, onClick, className }) => {
   const [, dragRef] = useDrag({
@@ -49,7 +49,7 @@ const Ingridient = ({ item, onClick, className }) => {
   );
 };
 
-const IngridientSection = ({ ingridients, title }) => {
+const IngridientSection = ({ ingridients, title, setCurrentTab, id }) => {
   const dispatch = useDispatch();
   const onIngridientClick = (data) => {
     dispatch(setCurrentIngridient(data));
@@ -61,7 +61,7 @@ const IngridientSection = ({ ingridients, title }) => {
         <h2 className="text text_type_main-medium">{title}</h2>
       </div>
 
-      <ul className={styles.productsList + " pl-4 mb-10"}>
+      <ul className={styles.productsList + " pl-4 mb-10"} id={id}>
         {ingridients.map((item) => {
           return (
             <Ingridient
