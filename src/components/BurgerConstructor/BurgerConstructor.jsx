@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import React, { useCallback, useEffect } from "react";
+=======
+import React from "react";
+>>>>>>> parent of 9d16844... fixed modal windows
 import {
   ConstructorElement,
   CurrencyIcon,
@@ -6,6 +10,7 @@ import {
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./BurgerConstructor.module.css";
+<<<<<<< HEAD
 import OrderDetails from "../OrderDetails/OrderDetails";
 import Modal from "../Modal/Modal";
 import { useDispatch, useSelector } from "react-redux";
@@ -68,6 +73,17 @@ const BurgerConstructor = () => {
         </Modal>
       )}
 
+=======
+import PropTypes from "prop-types";
+import menuItemPropTypes from "../../utils/constants";
+
+const BurgerConstructor = ({ data, handleOpenOrderDetails }) => {
+  const bun = data.find((item) => (item.type = "bun"));
+  const totalPrice = data.reduce((acc, item) => acc + item.price, 0);
+
+  return (
+    <section className={`${styles.section} pt-25 pl-4`}>
+>>>>>>> parent of 9d16844... fixed modal windows
       <div className="mb-10">
         <div className="mb-4 pl-8 pr-4">
           {ingridients.findIndex((item) => item.type === "bun") < 0 && (
@@ -188,9 +204,24 @@ const BurgerConstructor = () => {
             Оформить заказ
           </Button>
         </div>
+<<<<<<< HEAD
       )}
+=======
+        <Button type="primary" size="medium" onClick={handleOpenOrderDetails}>
+          Оформить заказ
+        </Button>
+      </div>
+>>>>>>> parent of 9d16844... fixed modal windows
     </section>
   );
 };
 
+<<<<<<< HEAD
+=======
+BurgerConstructor.propTypes = {
+  data: PropTypes.arrayOf(menuItemPropTypes).isRequired,
+  handleOpenOrderDetails: PropTypes.func.isRequired,
+};
+
+>>>>>>> parent of 9d16844... fixed modal windows
 export default BurgerConstructor;

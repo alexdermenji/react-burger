@@ -15,7 +15,8 @@
   justify-content: space-between;
 }
 .btnWrapper {
-  margin-left: auto;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .closeIcon {
