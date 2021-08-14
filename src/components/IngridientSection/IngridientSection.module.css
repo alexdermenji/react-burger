@@ -26,8 +26,3 @@
 .productsDescription {
   text-align: center;
 }
-
-.dragIngridient {
-  width: 100%;
-  background-color: var(--background-alt);
-}

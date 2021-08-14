@@ -1,18 +1,12 @@
 .section {
   width: 50%;
-  --amountOfTabs: 3;
 }
 
 .tabsList {
-  justify-content: space-between;
   list-style-type: none;
   display: flex;
   flex-wrap: wrap;
   width: 100%;
-}
-
-.tabsItem {
-  width: calc(100% / var(--amountOfTabs));
 }
 
 .ingridientsContainer {
