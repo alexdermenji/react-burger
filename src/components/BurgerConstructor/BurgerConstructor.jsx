@@ -1,5 +1,4 @@
-import React from "react";
-
+import React, { useState, useEffect } from "react";
 import {
   ConstructorElement,
   CurrencyIcon,
@@ -8,13 +7,40 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./BurgerConstructor.module.css";
 import PropTypes from "prop-types";
+import menuItemPropTypes from "../../utils/constants";
+import OrderDetails from "../OrderDetails/OrderDetails";
+import ModalOverlay from "../ModalOverlay/ModalOverlay";
 
 const BurgerConstructor = ({ data }) => {
   const bun = data.find((item) => (item.type = "bun"));
   const totalPrice = data.reduce((acc, item) => acc + item.price, 0);
 
+  const [modalOpened, setModalOpened] = useState(false);
+  useEffect(() => {
+    const escPressHandler = (e) => {
+      if (e.code === "Escape") {
+        handleCloseModal();
+      }
+    };
+    window.addEventListener("keydown", escPressHandler);
+    return () => window.removeEventListener("keydown", escPressHandler);
+  }, []);
+
+  const handleCloseModal = () => {
+    setModalOpened(false);
+  };
+
+  const handleOpenModal = () => {
+    setModalOpened(true);
+  };
+
   return (
     <section className={`${styles.section} pt-25 pl-4`}>
+      {modalOpened && (
+        <ModalOverlay onClose={handleCloseModal}>
+          <OrderDetails></OrderDetails>
+        </ModalOverlay>
+      )}
       <div className="mb-10">
         <div className="mb-4 pl-8 pr-4">
           <ConstructorElement
@@ -57,7 +83,7 @@ const BurgerConstructor = ({ data }) => {
           </span>
           <CurrencyIcon type="primary" />
         </div>
-        <Button type="primary" size="medium">
+        <Button type="primary" size="medium" onClick={handleOpenModal}>
           Оформить заказ
         </Button>
       </div>
@@ -65,6 +91,8 @@ const BurgerConstructor = ({ data }) => {
   );
 };
 
-BurgerConstructor.propTypes = { data: PropTypes.arrayOf(PropTypes.object) };
+BurgerConstructor.propTypes = {
+  data: PropTypes.arrayOf(menuItemPropTypes).isRequired,
+};
 
 export default BurgerConstructor;

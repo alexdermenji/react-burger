@@ -1,20 +1,31 @@
 import styles from "./IngridientSection.module.css";
 import PropTypes from "prop-types";
+import menuItemPropTypes from "../../utils/constants";
 import {
   Counter,
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-const IngridientSection = ({ ingridients }) => {
+const IngridientSection = ({
+  ingridients,
+  title,
+  handleOpenIngridientDetails,
+}) => {
   return (
-    <div>
+    <>
       <div className="mb-6">
-        <h2 className="text text_type_main-medium">{ingridients.title}</h2>
+        <h2 className="text text_type_main-medium">{title}</h2>
       </div>
       <ul className={styles.productsList + " pl-4 mb-10"}>
         {ingridients.map((item) => {
           return (
-            <li className={styles.productsItems + " pl-4 pr-4"} key={item._id}>
+            <li
+              onClick={() => {
+                handleOpenIngridientDetails(item);
+              }}
+              className={styles.productsItems + " pl-4 pr-4"}
+              key={item._id}
+            >
               <div className={styles.productsImage + " mb-1"}>
                 <img src={item.image} alt={item.name} />
               </div>
@@ -36,13 +47,14 @@ const IngridientSection = ({ ingridients }) => {
           );
         })}
       </ul>
-    </div>
+    </>
   );
 };
 
 IngridientSection.propTypes = {
-  title: PropTypes.string,
-  ingridients: PropTypes.arrayOf(PropTypes.object),
+  title: PropTypes.string.isRequired,
+  ingridients: PropTypes.arrayOf(menuItemPropTypes).isRequired,
+  handleOpenIngridientDetails: PropTypes.func.isRequired,
 };
 
 export default IngridientSection;
