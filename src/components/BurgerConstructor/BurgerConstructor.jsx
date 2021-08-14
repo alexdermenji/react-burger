@@ -121,6 +121,8 @@ const BurgerConstructor = () => {
                   {insideIngridients.map((item, idx) => {
                     const handleClose = () => {
                       dispatch(deleteIngridient(idx));
+                      console.log(ingridients);
+                      console.log(insideIngridients);
                     };
 
                     return (

@@ -63,11 +63,13 @@ export const ingridientsReducer = (state = initialState, action) => {
     case DELETE_INGRIDIENT: {
       const ingridient = state.constructorIngridients[action.payload];
       state.ingridientsCount[ingridient._id] -= 1;
-      state.constructorIngridients.splice(action.payload, 1);
+      state.insideIngridients.splice(action.payload, 1);
+      state.constructorIngridients.splice(action.payload + 1, 1);
 
       return {
         ...state,
         ingridientsCount: { ...state.ingridientsCount },
+        insideIngridients: [...state.insideIngridients],
         constructorIngridients: [...state.constructorIngridients],
       };
     }
