@@ -42,7 +42,6 @@ const BurgerIngridients = () => {
     });
 
     function changeTabOnScroll() {
-      console.log(container.scrollTop);
       if (container.scrollTop <= tabs[0].height) {
         setCurrent(tabs[0].title);
       } else if (
