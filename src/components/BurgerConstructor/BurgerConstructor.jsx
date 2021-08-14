@@ -15,33 +15,36 @@ import { sendOrder } from "../../services/actions/order/sendOrder";
 import { closeOrder } from "../../services/actions/order/closeOrder";
 import { useDrop } from "react-dnd";
 import { dropIngridient } from "../../services/actions/ingridients/dropIngridient";
+import { deleteIngridient } from "../../services/actions/ingridients/deleteIngridient";
+import { swapIngridients } from "../../services/actions/ingridients/swapIngridients";
+import selectInsideIngridients from "../../services/selectors/ingridients/selectInsideIngridients";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+
 const BurgerConstructor = () => {
   const dispatch = useDispatch();
+  const ingridients = useSelector(selectConstructorIngridients);
+  const orderNumber = useSelector(selectNumber);
+  const insideIngridients = useSelector(selectInsideIngridients);
 
-  const onDropHandler = (item) => {
-    dispatch(dropIngridient(item));
-  };
-
+  //react-dnd
   const [{ isOver }, dropRef] = useDrop({
     accept: "ingridient",
     drop(item) {
-      onDropHandler(item);
+      dispatch(dropIngridient(item));
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
     }),
   });
-  const ingridients = useSelector(selectConstructorIngridients);
-  const orderNumber = useSelector(selectNumber);
-  const totalPrice = ingridients.reduce((acc, item) => acc + item.price, 0);
 
-  const handleCloseModal = useCallback(() => {
-    dispatch(closeOrder());
-  }, [dispatch]);
+  const totalPrice = ingridients.reduce((acc, item) => acc + item.price, 0);
 
   const sendOrderClick = () => {
     dispatch(sendOrder(ingridients));
   };
+  const handleCloseModal = useCallback(() => {
+    dispatch(closeOrder());
+  }, [dispatch]);
 
   useEffect(() => {
     const escPressHandler = (e) => {
@@ -64,12 +67,20 @@ const BurgerConstructor = () => {
           <OrderDetails orderNumber={orderNumber}></OrderDetails>
         </Modal>
       )}
+
       <div className="mb-10">
         <div className="mb-4 pl-8 pr-4">
+          {ingridients.findIndex((item) => item.type === "bun") < 0 && (
+            <p className="text text_type_main-medium mt-30">
+              ✚ Добавьте булку 🍔{" "}
+            </p>
+          )}{" "}
+           
           {ingridients.map((item) => {
             if (item.type === "bun") {
               return (
                 <ConstructorElement
+                  key="top"
                   type="top"
                   isLocked={true}
                   text={`${item.name} верх`}
@@ -78,30 +89,79 @@ const BurgerConstructor = () => {
                 />
               );
             }
+
             return null;
           })}
         </div>
 
-        <ul className={`${styles.productsList} pr-4`}>
-          {ingridients.map((item) => {
-            if (item.type === "bun") return null;
-            return (
-              <li key={item._id} className={styles.productsItem}>
-                <DragIcon />
-                <ConstructorElement
-                  text={item.name}
-                  price={item.price}
-                  thumbnail={item.image}
-                />
-              </li>
-            );
-          })}
-        </ul>
+        <DragDropContext
+          onDragEnd={(param) => {
+            param.destination &&
+              dispatch(
+                swapIngridients({
+                  sourceIndex: param.source.index,
+                  destinationIndex: param.destination.index,
+                })
+              );
+          }}
+        >
+          <Droppable droppableId="id-1">
+            {(provided) => (
+              <div>
+                {ingridients.findIndex((item) => item.type !== "bun") < 0 && (
+                  <p className="text text_type_main-medium mt-10">
+                    ✚ Дабавьте внутрь ингридиенты 🥦 🍅 🧀
+                  </p>
+                )}
+                <ul
+                  className={`${styles.productsList} pr-4`}
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                >
+                  {insideIngridients.map((item, idx) => {
+                    const handleClose = () => {
+                      dispatch(deleteIngridient(idx));
+                    };
+
+                    return (
+                      <Draggable
+                        key={`${item._id}${idx}`}
+                        draggableId={"draggable" + item._id + idx}
+                        index={idx}
+                      >
+                        {(provided, snapshot) => (
+                          <li
+                            className={styles.productsItem}
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                          >
+                            <div {...provided.dragHandleProps}>
+                              <DragIcon />
+                            </div>
+                            <ConstructorElement
+                              text={item.name}
+                              price={item.price}
+                              thumbnail={item.image}
+                              handleClose={handleClose}
+                            />
+                          </li>
+                        )}
+                      </Draggable>
+                    );
+                  })}
+                  {provided.placeholder}
+                </ul>
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+
         <div className="mt-4 mb-10 pl-8 pr-4">
           {ingridients.map((item) => {
             if (item.type === "bun") {
               return (
                 <ConstructorElement
+                  key="bottom"
                   type="bottom"
                   isLocked={true}
                   text={`${item.name} низ`}
@@ -114,17 +174,19 @@ const BurgerConstructor = () => {
           })}
         </div>
       </div>
-      <div className={styles.checkout}>
-        <div className="mr-10">
-          <span className="text text_type_digits-medium mr-1">
-            {totalPrice}
-          </span>
-          <CurrencyIcon type="primary" />
+      {ingridients.length > 0 && (
+        <div className={styles.checkout}>
+          <div className="mr-10">
+            <span className="text text_type_digits-medium mr-1">
+              {totalPrice}
+            </span>
+            <CurrencyIcon type="primary" />
+          </div>
+          <Button type="primary" size="medium" onClick={sendOrderClick}>
+            Оформить заказ
+          </Button>
         </div>
-        <Button type="primary" size="medium" onClick={sendOrderClick}>
-          Оформить заказ
-        </Button>
-      </div>
+      )}
     </section>
   );
 };

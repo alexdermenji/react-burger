@@ -5,18 +5,22 @@ import {
   Counter,
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setCurrentIngridient } from "../../services/actions/ingridients/setCurrentIngridient";
 import { useDrag } from "react-dnd";
+import selectIngridientCount from "../../services/selectors/ingridients/selectIngridientCount";
+import React from "react";
 
 const Ingridient = ({ item, onClick, className }) => {
-  const [{ isDrag }, dragRef] = useDrag({
+  const [, dragRef] = useDrag({
     type: "ingridient",
     item: item,
     collect: (monitor) => ({
       isDrag: monitor.isDragging(),
     }),
   });
+
+  const ingridientCount = useSelector(selectIngridientCount);
   return (
     <li
       ref={dragRef}
@@ -27,9 +31,9 @@ const Ingridient = ({ item, onClick, className }) => {
       key={item._id}
     >
       <div className={styles.productsImage + " mb-1"}>
-        <img style={{ userDrag: "none" }} src={item.image} alt={item.name} />
+        <img src={item.image} alt={item.name} />
       </div>
-      <Counter count={1} size="default" />
+      <Counter count={ingridientCount[item._id] || 0} size="default" />
       <div className={styles.productsPrice + " mb-1"}>
         <span className="text text_type_digits-default   mr-1">
           {item.price}{" "}

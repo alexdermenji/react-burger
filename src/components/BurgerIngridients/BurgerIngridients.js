@@ -31,6 +31,27 @@ const BurgerIngridients = () => {
     return () => window.removeEventListener("keydown", escPressHandler);
   }, [handleCloseModal]);
 
+  useEffect(() => {
+    const container = document.getElementById("container");
+
+    function changeTabOnScroll() {
+      if (container.scrollTop <= 320) {
+        setCurrent("Булки");
+      } else if (container.scrollTop > 320 && container.scrollTop < 900) {
+        setCurrent("Соусы");
+      } else if (container.scrollTop >= 900) {
+        setCurrent("Начинки");
+      }
+    }
+
+    container.addEventListener("scroll", () => {
+      changeTabOnScroll();
+    });
+    return () => {
+      container.removeEventListener("scroll", changeTabOnScroll);
+    };
+  }, []);
+
   return (
     <section className={`${styles.section} pt-10`}>
       {currentIngridient && (
@@ -56,9 +77,10 @@ const BurgerIngridients = () => {
           })}
         </ul>
       </div>
-      <div className={styles.ingridientsContainer}>
+      <div className={styles.ingridientsContainer} id="container">
         {tabs.map((tab) => (
           <IngridientSection
+            setCurrentTab={setCurrent}
             key={tab.title}
             title={tab.title}
             ingridients={ingridients.filter((item) => item.type === tab.id)}
