@@ -1,51 +1,48 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import styles from "./App.module.css";
 import AppHeader from "../AppHeader/AppHeader";
 import BurgerIngridients from "../BurgerIngridients/BurgerIngridients";
 import BurgerConstructor from "../BurgerConstructor/BurgerConstructor";
-import { url } from "../../utils/api";
-
+import { useSelector, useDispatch } from "react-redux";
+import { getIngridients } from "../../services/actions/ingridients/getIngridients";
+import selectIngridients from "../../services/selectors/ingridients/selectIngridients";
+import selectIngridientsLoading from "../../services/selectors/ingridients/selectIngridientsLoading";
+import selectIngridientsError from "../../services/selectors/ingridients/selectIngridientsError";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 const App = () => {
-  const [data, setData] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const dispatch = useDispatch();
+
+  const ingridients = useSelector(selectIngridients);
+  const ingridientsLoading = useSelector(selectIngridientsLoading);
+  const ingridientsLoadingError = useSelector(selectIngridientsError);
 
   useEffect(() => {
-    fetch(url)
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        }
-        return Promise.reject(new Error("Ошибка"));
-      })
-      .then((data) => {
-        setData(data.data);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        setError(error.message);
-        setIsLoading(false);
-      });
-  }, []);
-  return (
-    <div className={styles.container}>
-      <header>
-        <AppHeader />
-      </header>
+    dispatch(getIngridients());
+  }, [dispatch]);
 
-      <main className={`${styles.main} pt-10 pb-10`}>
-        {isLoading && (
+  return (
+    <DndProvider backend={HTML5Backend}>
+      <div className={styles.container}>
+        <AppHeader />
+        {ingridientsLoading && (
           <div className="text text_type_main-large">Loading...</div>
         )}
-        {error && <div className="text text_type_main-large">{error}</div>}
-        {data && (
-          <>
-            <BurgerIngridients data={data} />
-            <BurgerConstructor data={data} />
-          </>
+        {ingridientsLoadingError && (
+          <div className="text text_type_main-large">
+            {ingridientsLoadingError}
+          </div>
         )}
-      </main>
-    </div>
+        <main className={`${styles.main} pt-10 pb-10`}>
+          {ingridients && (
+            <>
+              <BurgerIngridients />
+              <BurgerConstructor />
+            </>
+          )}
+        </main>
+      </div>
+    </DndProvider>
   );
 };
 
