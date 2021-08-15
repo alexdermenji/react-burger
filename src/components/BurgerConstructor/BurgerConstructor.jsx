@@ -25,6 +25,7 @@ const BurgerConstructor = () => {
   const ingridients = useSelector(selectConstructorIngridients);
   const orderNumber = useSelector(selectNumber);
   const insideIngridients = useSelector(selectInsideIngridients);
+  console.log("ok");
 
   //react-dnd
   const [{ isOver }, dropRef] = useDrop({
