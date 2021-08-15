@@ -37,18 +37,14 @@ const BurgerIngridients = () => {
   }, [handleCloseModal]);
 
   useLayoutEffect(() => {
-    let container = document.getElementById("container");
-
+    const container = document.getElementById("container");
     function changeTabOnScroll() {
+      const containerTop = container.getBoundingClientRect().top;
       for (const tab of [...tabs].reverse()) {
-        container = document.getElementById("container");
-        const containerTop = container.getBoundingClientRect().top;
-        const sectionTop =
-          document
-            .getElementById(tab.id)
-            .previousSibling.getBoundingClientRect().top - containerTop;
-
-        if (sectionTop < container.scrollTop) {
+        const sectionTop = document
+          .getElementById(tab.id)
+          .previousSibling.getBoundingClientRect().top;
+        if (sectionTop < containerTop) {
           setCurrent(tab.title);
           break;
         }
