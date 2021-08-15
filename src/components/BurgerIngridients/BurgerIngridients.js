@@ -37,7 +37,6 @@ const BurgerIngridients = () => {
   }, [handleCloseModal]);
 
   useLayoutEffect(() => {
-
     let container = document.getElementById("container");
 
     function changeTabOnScroll() {
@@ -54,9 +53,7 @@ const BurgerIngridients = () => {
           break;
         }
       }
-
-    
-
+    }
     container.addEventListener("scroll", () => {
       changeTabOnScroll();
     });
