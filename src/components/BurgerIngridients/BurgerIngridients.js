@@ -1,4 +1,9 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useLayoutEffect,
+  useCallback,
+} from "react";
 
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./BurgerIngridients.module.css";
@@ -31,28 +36,26 @@ const BurgerIngridients = () => {
     return () => window.removeEventListener("keydown", escPressHandler);
   }, [handleCloseModal]);
 
-  useEffect(() => {
-    const container = document.getElementById("container");
-    const containerHeight = container.offsetHeight;
+  useLayoutEffect(() => {
 
-    tabs.map((tab) => {
-      const height = document.getElementById(tab.id).offsetHeight;
-      tab.height = height;
-      return tab;
-    });
+    let container = document.getElementById("container");
 
     function changeTabOnScroll() {
-      if (container.scrollTop <= tabs[0].height) {
-        setCurrent(tabs[0].title);
-      } else if (
-        container.scrollTop > tabs[0].height &&
-        container.scrollTop < containerHeight - tabs[0].height
-      ) {
-        setCurrent(tabs[1].title);
-      } else if (container.scrollTop >= tabs[0].height + tabs[1].height) {
-        setCurrent(tabs[2].title);
+      for (const tab of [...tabs].reverse()) {
+        container = document.getElementById("container");
+        const containerTop = container.getBoundingClientRect().top;
+        const sectionTop =
+          document
+            .getElementById(tab.id)
+            .previousSibling.getBoundingClientRect().top - containerTop;
+
+        if (sectionTop < container.scrollTop) {
+          setCurrent(tab.title);
+          break;
+        }
       }
-    }
+
+    
 
     container.addEventListener("scroll", () => {
       changeTabOnScroll();
