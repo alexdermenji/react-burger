@@ -60,7 +60,7 @@ const BurgerConstructor = () => {
     <section
       className={`${styles.section} pt-25 pl-4`}
       ref={dropRef}
-      style={isOver ? { backgroundColor: "gray" } : null}
+      // style={isOver ? { backgroundColor: "gray" } : null}
     >
       {orderNumber && (
         <Modal onClose={handleCloseModal}>
@@ -68,7 +68,10 @@ const BurgerConstructor = () => {
         </Modal>
       )}
 
-      <div className="mb-10">
+      <div
+        className="mb-10"
+        style={isOver ? { backgroundColor: "gray" } : null}
+      >
         <div className="mb-4 pl-8 pr-4">
           {ingridients.findIndex((item) => item.type === "bun") < 0 && (
             <p className="text text_type_main-medium mt-30">
@@ -120,7 +123,7 @@ const BurgerConstructor = () => {
                 >
                   {insideIngridients.map((item, idx) => {
                     const handleClose = () => {
-                      dispatch(deleteIngridient(idx));
+                      dispatch(deleteIngridient({ idx, item }));
                       console.log(ingridients);
                       console.log(insideIngridients);
                     };
