@@ -187,20 +187,20 @@ const BurgerConstructor = () => {
         </div>
       </div>
 
-      {ingridients.find((item) => item.data.type === "bun") &&
-        ingridients.length > 1 && (
-          <div className={styles.checkout}>
-            <div className="mr-10">
-              <span className="text text_type_digits-medium mr-1">
-                {totalPrice}
-              </span>
-              <CurrencyIcon type="primary" />
-            </div>
+      <div className={styles.checkout}>
+        <div className="mr-10">
+          <span className="text text_type_digits-medium mr-1">
+            {totalPrice}
+          </span>
+          <CurrencyIcon type="primary" />
+        </div>
+        {ingridients.find((item) => item.data.type === "bun") &&
+          ingridients.length > 1 && (
             <Button type="primary" size="medium" onClick={sendOrderClick}>
               Оформить заказ
             </Button>
-          </div>
-        )}
+          )}
+      </div>
     </section>
   );
 };
