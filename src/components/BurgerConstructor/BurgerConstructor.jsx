@@ -17,14 +17,12 @@ import { useDrop } from "react-dnd";
 import { dropIngridient } from "../../services/actions/ingridients/dropIngridient";
 import { deleteIngridient } from "../../services/actions/ingridients/deleteIngridient";
 import { swapIngridients } from "../../services/actions/ingridients/swapIngridients";
-import selectInsideIngridients from "../../services/selectors/ingridients/selectInsideIngridients";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const BurgerConstructor = () => {
   const dispatch = useDispatch();
   const ingridients = useSelector(selectConstructorIngridients);
   const orderNumber = useSelector(selectNumber);
-  const insideIngridients = useSelector(selectInsideIngridients);
 
   //react-dnd
   const [{ isOver }, dropRef] = useDrop({
@@ -37,7 +35,10 @@ const BurgerConstructor = () => {
     }),
   });
 
-  const totalPrice = ingridients.reduce((acc, item) => acc + item.price, 0);
+  const totalPrice = ingridients.reduce(
+    (acc, item) => acc + item.data.price * item.count,
+    0
+  );
 
   const sendOrderClick = () => {
     dispatch(sendOrder(ingridients));
@@ -57,11 +58,7 @@ const BurgerConstructor = () => {
   }, [handleCloseModal]);
 
   return (
-    <section
-      className={`${styles.section} pt-25 pl-4`}
-      ref={dropRef}
-      // style={isOver ? { backgroundColor: "gray" } : null}
-    >
+    <section className={`${styles.section} pt-25 pl-4`} ref={dropRef}>
       {orderNumber && (
         <Modal onClose={handleCloseModal}>
           <OrderDetails orderNumber={orderNumber}></OrderDetails>
@@ -73,22 +70,22 @@ const BurgerConstructor = () => {
         style={isOver ? { backgroundColor: "gray" } : null}
       >
         <div className="mb-4 pl-8 pr-4">
-          {ingridients.findIndex((item) => item.type === "bun") < 0 && (
+          {ingridients.findIndex((item) => item.data.type === "bun") < 0 && (
             <p className="text text_type_main-medium mt-30">
-              ✚ Добавьте булку 🍔{" "}
+              ✚ Добавьте булки 🍔
             </p>
-          )}{" "}
+          )}
            
           {ingridients.map((item) => {
-            if (item.type === "bun") {
+            if (item.data.type === "bun") {
               return (
                 <ConstructorElement
                   key="top"
                   type="top"
                   isLocked={true}
-                  text={`${item.name} верх`}
-                  price={item.price}
-                  thumbnail={item.image}
+                  text={`${item.data.name} верх`}
+                  price={item.data.price}
+                  thumbnail={item.data.image}
                 />
               );
             }
@@ -111,9 +108,10 @@ const BurgerConstructor = () => {
           <Droppable droppableId="id-1">
             {(provided) => (
               <div>
-                {ingridients.findIndex((item) => item.type !== "bun") < 0 && (
+                {ingridients.findIndex((item) => item.data.type !== "bun") <
+                  0 && (
                   <p className="text text_type_main-medium mt-10">
-                    ✚ Дабавьте внутрь ингридиенты 🥦 🍅 🧀
+                    ✚ Добавьте внутрь ингридиенты 🥦 🍅 🧀
                   </p>
                 )}
                 <ul
@@ -121,38 +119,47 @@ const BurgerConstructor = () => {
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                 >
-                  {insideIngridients.map((item, idx) => {
+                  {ingridients.map((item, idx) => {
                     const handleClose = () => {
                       dispatch(deleteIngridient({ idx, item }));
-                      console.log(ingridients);
-                      console.log(insideIngridients);
                     };
 
-                    return (
-                      <Draggable
-                        key={`${item._id}${idx}`}
-                        draggableId={"draggable" + item._id + idx}
-                        index={idx}
-                      >
-                        {(provided, snapshot) => (
-                          <li
-                            className={styles.productsItem}
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
+                    if (item.data.type !== "bun") {
+                      const list = [];
+                      for (let i = 0; i < item.count; i++) {
+                        list.push(
+                          <Draggable
+                            key={`${item.data._id}_${i}`}
+                            draggableId={"draggable" + item.data._id + idx}
+                            index={idx}
                           >
-                            <div {...provided.dragHandleProps}>
-                              <DragIcon />
-                            </div>
-                            <ConstructorElement
-                              text={item.name}
-                              price={item.price}
-                              thumbnail={item.image}
-                              handleClose={handleClose}
-                            />
-                          </li>
-                        )}
-                      </Draggable>
-                    );
+                            {(provided, snapshot) => (
+                              <li
+                                className={styles.productsItem}
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                              >
+                                <div {...provided.dragHandleProps}>
+                                  <DragIcon />
+                                </div>
+                                <ConstructorElement
+                                  text={item.data.name}
+                                  price={item.data.price}
+                                  thumbnail={item.data.image}
+                                  handleClose={handleClose}
+                                />
+                              </li>
+                            )}
+                          </Draggable>
+                        );
+                      }
+                      return (
+                        <React.Fragment key={item.data._id}>
+                          {list}
+                        </React.Fragment>
+                      );
+                    }
+                    return null;
                   })}
                   {provided.placeholder}
                 </ul>
@@ -163,15 +170,15 @@ const BurgerConstructor = () => {
 
         <div className="mt-4 mb-10 pl-8 pr-4">
           {ingridients.map((item) => {
-            if (item.type === "bun") {
+            if (item.data.type === "bun") {
               return (
                 <ConstructorElement
                   key="bottom"
                   type="bottom"
                   isLocked={true}
-                  text={`${item.name} низ`}
-                  price={item.price}
-                  thumbnail={item.image}
+                  text={`${item.data.name} низ`}
+                  price={item.data.price}
+                  thumbnail={item.data.image}
                 />
               );
             }
@@ -179,19 +186,21 @@ const BurgerConstructor = () => {
           })}
         </div>
       </div>
-      {ingridients.length > 0 && (
-        <div className={styles.checkout}>
-          <div className="mr-10">
-            <span className="text text_type_digits-medium mr-1">
-              {totalPrice}
-            </span>
-            <CurrencyIcon type="primary" />
+
+      {ingridients.find((item) => item.data.type === "bun") &&
+        ingridients.length > 1 && (
+          <div className={styles.checkout}>
+            <div className="mr-10">
+              <span className="text text_type_digits-medium mr-1">
+                {totalPrice}
+              </span>
+              <CurrencyIcon type="primary" />
+            </div>
+            <Button type="primary" size="medium" onClick={sendOrderClick}>
+              Оформить заказ
+            </Button>
           </div>
-          <Button type="primary" size="medium" onClick={sendOrderClick}>
-            Оформить заказ
-          </Button>
-        </div>
-      )}
+        )}
     </section>
   );
 };

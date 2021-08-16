@@ -1,9 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useLayoutEffect,
-  useCallback,
-} from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./BurgerIngridients.module.css";
@@ -15,13 +10,14 @@ import selectCurrentIngridient from "../../services/selectors/ingridients/select
 import { useSelector, useDispatch } from "react-redux";
 import { setCurrentIngridient } from "../../services/actions/ingridients/setCurrentIngridient";
 import selectIngridients from "../../services/selectors/ingridients/selectIngridients";
+import selectConstructorIngridients from "../../services/selectors/ingridients/selectConstructotIngridients";
 const BurgerIngridients = () => {
   const dispatch = useDispatch();
   const [current, setCurrent] = useState(tabs[0].title);
-
   const ingridients = useSelector(selectIngridients);
   const currentIngridient = useSelector(selectCurrentIngridient);
-
+  const constructorIngridients = useSelector(selectConstructorIngridients);
+  const containerRef = useRef(null);
   const handleCloseModal = useCallback(() => {
     dispatch(setCurrentIngridient(null));
   }, [dispatch]);
@@ -36,14 +32,14 @@ const BurgerIngridients = () => {
     return () => window.removeEventListener("keydown", escPressHandler);
   }, [handleCloseModal]);
 
-  useLayoutEffect(() => {
-    const container = document.getElementById("container");
+  useEffect(() => {
+    const container = containerRef.current;
     function changeTabOnScroll() {
       const containerTop = container.getBoundingClientRect().top;
       for (const tab of [...tabs].reverse()) {
-        const sectionTop = document
-          .getElementById(tab.id)
-          .previousSibling.getBoundingClientRect().top;
+        const sectionTop = container
+          .querySelector(`#${tab.id}`)
+          .getBoundingClientRect().top;
         if (sectionTop < containerTop) {
           setCurrent(tab.title);
           break;
@@ -83,10 +79,10 @@ const BurgerIngridients = () => {
           })}
         </ul>
       </div>
-      <div className={styles.ingridientsContainer} id="container">
+      <div className={styles.ingridientsContainer} ref={containerRef}>
         {tabs.map((tab) => (
           <IngridientSection
-            setCurrentTab={setCurrent}
+            constructorIngridients={constructorIngridients}
             key={tab.title}
             title={tab.title}
             ingridients={ingridients.filter((item) => item.type === tab.id)}
