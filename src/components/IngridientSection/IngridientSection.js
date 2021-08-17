@@ -5,13 +5,21 @@ import {
   Counter,
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useDispatch, useSelector } from "react-redux";
+import { useMemo } from "react";
+import { useDispatch } from "react-redux";
 import { setCurrentIngridient } from "../../services/actions/ingridients/setCurrentIngridient";
 import { useDrag } from "react-dnd";
-import selectIngridientCount from "../../services/selectors/ingridients/selectIngridientCount";
-import React from "react";
 
-const Ingridient = ({ item, onClick, className }) => {
+const Ingridient = ({ item, onClick, constructorIngridients }) => {
+  const counter = useMemo(() => {
+    const ingridient = constructorIngridients.find(
+      (ing) => ing.data._id === item._id
+    );
+
+    const counter = ingridient ? ingridient.count : 0;
+    return counter;
+  }, [constructorIngridients, item]);
+
   const [, dragRef] = useDrag({
     type: "ingridient",
     item: item,
@@ -19,21 +27,17 @@ const Ingridient = ({ item, onClick, className }) => {
       isDrag: monitor.isDragging(),
     }),
   });
-
-  const ingridientCount = useSelector(selectIngridientCount);
   return (
     <li
       ref={dragRef}
       onClick={onClick}
-      className={
-        styles.productsItems + " pl-4 pr-4" + (className ? ` ${className}` : "")
-      }
+      className={styles.productsItems + " pl-4 pr-4"}
       key={item._id}
     >
       <div className={styles.productsImage + " mb-1"}>
         <img src={item.image} alt={item.name} />
       </div>
-      <Counter count={ingridientCount[item._id] || 0} size="default" />
+      <Counter count={counter || 0} size="default" />
       <div className={styles.productsPrice + " mb-1"}>
         <span className="text text_type_digits-default   mr-1">
           {item.price}{" "}
@@ -49,15 +53,20 @@ const Ingridient = ({ item, onClick, className }) => {
   );
 };
 
-const IngridientSection = ({ ingridients, title }) => {
+const IngridientSection = ({
+  ingridients,
+  title,
+  id,
+  constructorIngridients,
+}) => {
   const dispatch = useDispatch();
   const onIngridientClick = (data) => {
     dispatch(setCurrentIngridient(data));
   };
 
   return (
-    <div>
-      <div className="mb-6">
+    <>
+      <div className={`mb-6 ${id}`} id={id}>
         <h2 className="text text_type_main-medium">{title}</h2>
       </div>
 
@@ -65,6 +74,7 @@ const IngridientSection = ({ ingridients, title }) => {
         {ingridients.map((item) => {
           return (
             <Ingridient
+              constructorIngridients={constructorIngridients}
               key={item._id}
               item={item}
               onClick={() => onIngridientClick(item)}
@@ -72,13 +82,20 @@ const IngridientSection = ({ ingridients, title }) => {
           );
         })}
       </ul>
-    </div>
+    </>
   );
 };
 
 IngridientSection.propTypes = {
+  id: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   ingridients: PropTypes.arrayOf(menuItemPropTypes).isRequired,
+  constructorIngridients: PropTypes.array.isRequired,
+};
+Ingridient.propTypes = {
+  constructorIngridients: PropTypes.array.isRequired,
+  item: PropTypes.object.isRequired,
+  onClick: PropTypes.func.isRequired,
 };
 
 export default IngridientSection;
