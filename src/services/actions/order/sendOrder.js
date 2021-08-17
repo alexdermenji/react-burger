@@ -16,7 +16,12 @@ export const sendOrder = (ingridients) => {
           "content-type": "application/json",
         },
         body: JSON.stringify({
-          ingredients: ingridients,
+          ingredients: ingridients.reduce((result, current) => {
+            for (let i = 0; i < current.count; i++) {
+              result.push(current.data);
+            }
+            return result;
+          }, []),
         }),
       });
       if (response.ok) {
