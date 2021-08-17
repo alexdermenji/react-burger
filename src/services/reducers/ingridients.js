@@ -10,7 +10,6 @@ const initialState = {
   ingridientsLoading: false,
   ingridientsLoadingError: null,
   ingridients: null,
-  ingridientsCount: {},
   constructorIngridients: [],
   currentIngridient: null,
 };
@@ -38,6 +37,7 @@ export const ingridientsReducer = (state = initialState, action) => {
           (ingridient) => ingridient.data.type === "bun"
         );
         const newIngridient = { data: action.payload, count: 2 };
+
         if (bunIndex === -1) {
           return {
             ...state,
@@ -57,10 +57,12 @@ export const ingridientsReducer = (state = initialState, action) => {
         (item) => item.data._id === action.payload._id
       );
       if (currentIngrientIndex !== -1) {
-        const newConstructorIngridients = [...constructorIngridients];
+        //if element exists
+        const newConstructorIngridients = [...constructorIngridients]; //shallow copy of ingridients
         newConstructorIngridients[currentIngrientIndex] = {
+          //existing element = {...existing data, counter + 1}
           ...newConstructorIngridients[currentIngrientIndex],
-          count: newConstructorIngridients[currentIngrientIndex].count + 1,
+          count: newConstructorIngridients[currentIngrientIndex].count + 1, //count: same element count + 1
         };
         return {
           ...state,
@@ -69,11 +71,12 @@ export const ingridientsReducer = (state = initialState, action) => {
       }
 
       return {
-        ...state,
+        //if element doesn't exist
+        ...state, //current state
         constructorIngridients: [
-          ...state.constructorIngridients,
+          ...state.constructorIngridients, // add existing elements,
           {
-            data: action.payload,
+            data: action.payload, //add new element
             count: 1,
           },
         ],

@@ -133,7 +133,7 @@ const BurgerConstructor = () => {
                             draggableId={"draggable" + item.data._id + idx}
                             index={idx}
                           >
-                            {(provided, snapshot) => (
+                            {(provided) => (
                               <li
                                 className={styles.productsItem}
                                 ref={provided.innerRef}
