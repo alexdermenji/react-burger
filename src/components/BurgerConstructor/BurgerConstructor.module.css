@@ -1,0 +1,26 @@
+.productsList {
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 500px;
+  overflow-y: scroll;
+}
+
+.productsItem {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.section {
+  width: 50%;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+.checkout {
+  display: flex;
+  justify-content: flex-end;
+}

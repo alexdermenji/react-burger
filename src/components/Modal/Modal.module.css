@@ -1,0 +1,33 @@
+.container {
+  text-align: center;
+  z-index: 100;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 50vw;
+  background-color: #1c1c21;
+  box-shadow: 0px 4px 4px 0px #00000040;
+  border-radius: 18px;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+.btnWrapper {
+  margin-left: auto;
+}
+
+.closeIcon {
+  padding: 0;
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}

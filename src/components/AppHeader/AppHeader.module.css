@@ -1,0 +1,17 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.menuList {
+  display: flex;
+  list-style-type: none;
+}
+
+.menuLink {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--text-primary-color);
+}
