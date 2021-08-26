@@ -34,7 +34,14 @@ const Register = () => {
       },
       body: JSON.stringify(data),
     });
-    return response.json(); //
+
+    if (response.ok) {
+      return response.json();
+    } else {
+      response.json().then((data) => {
+        alert(data.message);
+      }); //TODO show error
+    } //
   }
 
   const onSubmit = (e) => {

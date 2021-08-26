@@ -45,7 +45,7 @@ const AppHeader = () => {
         <div className="p-5">
           <NavLink
             activeClassName={styles.active}
-            to="/login"
+            to="/profile"
             className={`${styles.menuLink} text text_type_main-default `}
           >
             <div className="mr-2">

@@ -1,0 +1,24 @@
+.section {
+  display: flex;
+  padding-top: 120px;
+}
+
+.navigation {
+  width: 45%;
+}
+
+.form {
+  width: 55%;
+}
+
+.list {
+  list-style-type: none;
+  margin-bottom: 80px;
+}
+.listLink {
+  text-decoration: none;
+}
+
+.active {
+  color: white;
+}
