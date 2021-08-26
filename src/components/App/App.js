@@ -7,7 +7,7 @@ import selectIngridientsLoading from "../../services/selectors/ingridients/selec
 import selectIngridientsError from "../../services/selectors/ingridients/selectIngridientsError";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 import AppHeader from "../AppHeader/AppHeader";
 import BurgerIngridients from "../BurgerIngridients/BurgerIngridients";
 import BurgerConstructor from "../BurgerConstructor/BurgerConstructor";
@@ -16,58 +16,85 @@ import Register from "../../pages/Register";
 import ForgotPassword from "../../pages/ForgotPassword";
 import ResetPassword from "../../pages/ResetPassword";
 import Profile from "../../pages/Profile";
+import selectIsLogin from "../../services/selectors/auth/selectIsLogin";
+
+const AuthRoute = ({ path, exact, children }) => {
+  const isLogin = useSelector(selectIsLogin);
+  return (
+    <Route path={path} exact={exact}>
+      {!isLogin && <Redirect to="/login" />}
+      {isLogin && children}
+    </Route>
+  );
+};
+
+const NotAuthRoute = ({ path, exact, children }) => {
+  const isLogin = useSelector(selectIsLogin);
+  return (
+    <Route path={path} exact={exact}>
+      {isLogin && <Redirect to="/" />}
+      {!isLogin && children}
+    </Route>
+  );
+};
+
 const App = () => {
   const dispatch = useDispatch();
 
   const ingridients = useSelector(selectIngridients);
   const ingridientsLoading = useSelector(selectIngridientsLoading);
   const ingridientsLoadingError = useSelector(selectIngridientsError);
+  const isLogin = useSelector(selectIsLogin);
 
   useEffect(() => {
     dispatch(getIngridients());
+    // dispatch(loadUserData());
   }, [dispatch]);
 
   return (
     <DndProvider backend={HTML5Backend}>
       <div className={styles.container}>
         <AppHeader />
-        <main className={styles.wrapper}>
-          <Switch>
-            <Route path="/" exact>
-              {ingridientsLoading && (
-                <div className="text text_type_main-large">Loading...</div>
-              )}
-              {ingridientsLoadingError && (
-                <div className="text text_type_main-large">
-                  {ingridientsLoadingError}
-                </div>
-              )}
-              <section className={`${styles.main} pt-10 pb-10`}>
-                {ingridients && (
-                  <>
-                    <BurgerIngridients />
-                    <BurgerConstructor />
-                  </>
+        {isLogin !== null && (
+          <main className={styles.wrapper}>
+            <Switch>
+              <AuthRoute path="/" exact>
+                {ingridientsLoading && (
+                  <div className="text text_type_main-large">Loading...</div>
                 )}
-              </section>
-            </Route>
-            <Route path="/login">
-              <Login />
-            </Route>
-            <Route path="/register">
-              <Register />
-            </Route>
-            <Route path="/forgot-password">
-              <ForgotPassword />
-            </Route>
-            <Route path="/reset-password">
-              <ResetPassword />
-            </Route>
-            <Route path="/profile">
-              <Profile />
-            </Route>
-          </Switch>
-        </main>
+                {ingridientsLoadingError && (
+                  <div className="text text_type_main-large">
+                    {ingridientsLoadingError}
+                  </div>
+                )}
+                <section className={`${styles.main} pt-10 pb-10`}>
+                  {ingridients && (
+                    <>
+                      <BurgerIngridients />
+                      <BurgerConstructor />
+                    </>
+                  )}
+                </section>
+              </AuthRoute>
+              <NotAuthRoute path="/login">
+                <Login />
+              </NotAuthRoute>
+              <NotAuthRoute path="/register">
+                <Register />
+              </NotAuthRoute>
+              <NotAuthRoute path="/forgot-password">
+                <ForgotPassword />
+              </NotAuthRoute>
+              <NotAuthRoute path="/reset-password">
+                <ResetPassword />
+              </NotAuthRoute>
+              <AuthRoute path="/profile">
+                <Profile />
+              </AuthRoute>
+            </Switch>
+          </main>
+        )}
+        {isLogin === null && <div>Loading...</div>}
       </div>
     </DndProvider>
   );
