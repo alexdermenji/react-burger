@@ -6,7 +6,7 @@ import { LOAD_USER_SUCCESS } from "../actions/auth/loadUserSucces";
 const initialState = {
   user: {},
   isLogin: null,
-  isLoading: false,
+  isLoading: true,
 };
 export const authReducer = (state = initialState, action) => {
   switch (action.type) {

@@ -23,7 +23,7 @@ export const setCookie = (name, value, options = {}) => {
   document.cookie = updatedCookie;
 };
 const checkResponse = (res) => {
-  return res.ok ? res.json() : res.json.then((err) => Promise.reject(err));
+  return res.ok ? res.json() : res.json().then((err) => Promise.reject(err));
 };
 
 const refreshToken = async () => {
@@ -46,7 +46,7 @@ const apiFetch = async (url, options) => {
   const fetchOptions = {
     ...options,
   };
-  if (options.body && (!options.headers || !options.header["Content-Type"])) {
+  if (options.body && (!options.headers || !options.headers["Content-Type"])) {
     if (fetchOptions.headers) {
       fetchOptions.headers["Content-Type"] = "application/json";
     } else {

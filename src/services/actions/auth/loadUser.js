@@ -1,5 +1,5 @@
 import { getUrl } from "../../../services/api/apiUrl";
-import apiFetch from "../../../services/api/apiFetch";
+import apiFetch from "../../api/apiFetch";
 import { LOAD_USER_SUCCESS } from "./loadUserSucces";
 
 export const loadUser = () => {

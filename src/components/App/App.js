@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import styles from "./App.module.css";
 import { useSelector, useDispatch } from "react-redux";
 import { getIngridients } from "../../services/actions/ingridients/getIngridients";
+import { loadUser } from "../../services/actions/auth/loadUser";
 import selectIngridients from "../../services/selectors/ingridients/selectIngridients";
 import selectIngridientsLoading from "../../services/selectors/ingridients/selectIngridientsLoading";
 import selectIngridientsError from "../../services/selectors/ingridients/selectIngridientsError";
@@ -48,7 +49,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(getIngridients());
-    // dispatch(loadUserData());
+    dispatch(loadUser());
   }, [dispatch]);
 
   return (
