@@ -57,18 +57,18 @@ const apiFetch = async (url, options) => {
   if (options.body && (!options.headers || !options.headers["Content-Type"])) {
     if (fetchOptions.headers) {
       fetchOptions.headers["Content-Type"] = "application/json";
-      fetchOptions.headers["Authorization"] = getCookie("accessToken");
     } else {
       fetchOptions.headers = {
         "Content-Type": "application/json",
-        Authorization: getCookie("accessToken"),
       };
     }
   }
+
   try {
     const res = await fetch(url, fetchOptions);
     return await checkResponse(res);
   } catch (err) {
+    console.log(err);
     if (err.message === "jwt expired") {
       const refreshResult = await refreshToken();
       if (refreshResult) {

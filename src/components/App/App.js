@@ -21,6 +21,7 @@ import selectIsLogin from "../../services/selectors/auth/selectIsLogin";
 
 const AuthRoute = ({ path, exact, children }) => {
   const isLogin = useSelector(selectIsLogin);
+  console.log(isLogin);
   return (
     <Route path={path} exact={exact}>
       {!isLogin && <Redirect to="/login" />}
