@@ -22,6 +22,12 @@ export const setCookie = (name, value, options = {}) => {
   }
   document.cookie = updatedCookie;
 };
+
+export const getCookie = (name) => {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(";").shift();
+};
 const checkResponse = (res) => {
   return res.ok ? res.json() : res.json().then((err) => Promise.reject(err));
 };
@@ -30,7 +36,10 @@ const refreshToken = async () => {
   try {
     const result = await fetch(`${BURGER_API_URL}/auth/token`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+      },
+
       body: JSON.stringify({ token: localStorage.getItem("refreshToken") }),
     });
     localStorage.setItem("refreshToken", result.accessToken);
@@ -39,7 +48,6 @@ const refreshToken = async () => {
   } catch {
     return false;
   }
-  //   options.headers.authorization = result.accessToken;
 };
 
 const apiFetch = async (url, options) => {
@@ -49,9 +57,11 @@ const apiFetch = async (url, options) => {
   if (options.body && (!options.headers || !options.headers["Content-Type"])) {
     if (fetchOptions.headers) {
       fetchOptions.headers["Content-Type"] = "application/json";
+      fetchOptions.headers["Authorization"] = getCookie("accessToken");
     } else {
       fetchOptions.headers = {
         "Content-Type": "application/json",
+        Authorization: getCookie("accessToken"),
       };
     }
   }

@@ -41,7 +41,6 @@ const NotAuthRoute = ({ path, exact, children }) => {
 
 const App = () => {
   const dispatch = useDispatch();
-
   const ingridients = useSelector(selectIngridients);
   const ingridientsLoading = useSelector(selectIngridientsLoading);
   const ingridientsLoadingError = useSelector(selectIngridientsError);

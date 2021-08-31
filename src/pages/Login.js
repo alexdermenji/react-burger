@@ -20,7 +20,6 @@ const Login = () => {
   };
 
   const onSubmit = (e) => {
-    console.log("ok");
     const data = { email: mailValue, password: passwordValue };
     e.preventDefault();
     const response = apiFetch(
