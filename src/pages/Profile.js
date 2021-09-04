@@ -8,18 +8,20 @@ import {
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import apiFetch from "../services/api/apiFetch";
-import { LOGOUT_USER_SUCCESS } from "../services/actions/auth/logoutUserSuccess";
+import { logoutUserSuccess } from "../services/actions/auth/logoutUserSuccess";
 import { USER_DATA_CHANGE } from "../services/actions/auth/userDataChange";
 import { useDispatch, useSelector } from "react-redux";
 import selectUser from "../services/selectors/auth/selectUser";
-
 const Profile = () => {
   const inputRef = React.useRef(null);
 
-  const onIconClick = () => {
-    setTimeout(() => inputRef.current.focus(), 0);
-    alert("Icon Click Callback");
-  };
+  function eraseCookie(name) {
+    document.cookie = name + "=; Max-Age=-99999999;";
+  }
+  // const onIconClick = () => {
+  //   setTimeout(() => inputRef.current.focus(), 0);
+  //   alert("Icon Click Callback");
+  // };
 
   const user = useSelector(selectUser);
 
@@ -32,11 +34,6 @@ const Profile = () => {
 
   const dispatch = useDispatch();
 
-  const [passwordValue, setPasswordValue] = React.useState("password");
-  const onPasswordChange = (e) => {
-    setPasswordValue(e.target.value);
-  };
-
   const exit = () => {
     const response = apiFetch(
       "https://norma.nomoreparties.space/api/auth/logout",
@@ -48,9 +45,8 @@ const Profile = () => {
     response
       .then((res) => {
         if (res.success) {
-          dispatch({
-            type: LOGOUT_USER_SUCCESS,
-          });
+          dispatch(logoutUserSuccess());
+          eraseCookie("accessToken");
         }
         console.log(res);
       })
@@ -86,7 +82,7 @@ const Profile = () => {
               onClick={exit}
               activeClassName={styles.active}
               className={`${styles.listLink} text text_type_main-medium text_color_inactive`}
-              to="/"
+              to="/login"
             >
               Выход
             </NavLink>
@@ -108,7 +104,7 @@ const Profile = () => {
               name={"name"}
               error={false}
               ref={inputRef}
-              onIconClick={onIconClick}
+              // onIconClick={onIconClick}
               errorText={"Ошибка"}
               size={"default"}
             />
@@ -119,7 +115,7 @@ const Profile = () => {
           <div className="mb-6">
             <PasswordInput
               onChange={onDataChange}
-              value={passwordValue}
+              value={"password"}
               name={"password"}
             />
           </div>

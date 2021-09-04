@@ -8,7 +8,7 @@ import selectIngridientsLoading from "../../services/selectors/ingridients/selec
 import selectIngridientsError from "../../services/selectors/ingridients/selectIngridientsError";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { Route, Switch, Redirect } from "react-router-dom";
+import { Route, Switch, Redirect, useLocation } from "react-router-dom";
 import AppHeader from "../AppHeader/AppHeader";
 import BurgerIngridients from "../BurgerIngridients/BurgerIngridients";
 import BurgerConstructor from "../BurgerConstructor/BurgerConstructor";
@@ -17,11 +17,13 @@ import Register from "../../pages/Register";
 import ForgotPassword from "../../pages/ForgotPassword";
 import ResetPassword from "../../pages/ResetPassword";
 import Profile from "../../pages/Profile";
+import NotExist from "../../pages/NotExist";
+import Ingridient from "../../pages/Ingridient";
 import selectIsLogin from "../../services/selectors/auth/selectIsLogin";
+import selectIngridientsModalIsOpened from "../../services/selectors/ingridients/selectIngridientsModalIsOpened";
 
 const AuthRoute = ({ path, exact, children }) => {
   const isLogin = useSelector(selectIsLogin);
-  console.log(isLogin);
   return (
     <Route path={path} exact={exact}>
       {!isLogin && <Redirect to="/login" />}
@@ -32,6 +34,7 @@ const AuthRoute = ({ path, exact, children }) => {
 
 const NotAuthRoute = ({ path, exact, children }) => {
   const isLogin = useSelector(selectIsLogin);
+
   return (
     <Route path={path} exact={exact}>
       {isLogin && <Redirect to="/" />}
@@ -45,12 +48,16 @@ const App = () => {
   const ingridients = useSelector(selectIngridients);
   const ingridientsLoading = useSelector(selectIngridientsLoading);
   const ingridientsLoadingError = useSelector(selectIngridientsError);
+  const ingridientModalIsOpened = useSelector(selectIngridientsModalIsOpened);
   const isLogin = useSelector(selectIsLogin);
-
+  console.log(ingridientModalIsOpened);
   useEffect(() => {
     dispatch(getIngridients());
     dispatch(loadUser());
   }, [dispatch]);
+
+  let location = useLocation();
+  let background = location.state && location.state.background;
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -58,7 +65,7 @@ const App = () => {
         <AppHeader />
         {isLogin !== null && (
           <main className={styles.wrapper}>
-            <Switch>
+            <Switch location={background || location}>
               <AuthRoute path="/" exact>
                 {ingridientsLoading && (
                   <div className="text text_type_main-large">Loading...</div>
@@ -92,6 +99,14 @@ const App = () => {
               <AuthRoute path="/profile">
                 <Profile />
               </AuthRoute>
+              {!ingridientModalIsOpened && (
+                <AuthRoute path="/ingridients/">
+                  <Ingridient />
+                </AuthRoute>
+              )}
+              <NotAuthRoute>
+                <NotExist />
+              </NotAuthRoute>
             </Switch>
           </main>
         )}

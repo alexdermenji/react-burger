@@ -1,4 +1,5 @@
 import React from "react";
+import { useHistory } from "react-router";
 import styles from "./Login.module.css";
 import { Link } from "react-router-dom";
 import apiFetch, { setCookie } from "../services/api/apiFetch";
@@ -7,9 +8,13 @@ import {
   PasswordInput,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
+import { useDispatch } from "react-redux";
+import { loadUserSuccess } from "../services/actions/auth/loadUserSucces";
 
 const Login = () => {
+  const dispatch = useDispatch();
   const [mailValue, setMailValue] = React.useState("");
+  const history = useHistory();
   const onMailChange = (e) => {
     setMailValue(e.target.value);
   };
@@ -36,6 +41,8 @@ const Login = () => {
         setCookie("accessToken", res.accessToken);
         localStorage.setItem("refreshToken", res.refreshToken);
         console.log("Local storage updated");
+        dispatch(loadUserSuccess(res.user));
+        history.push("/");
       })
       .catch((e) => {
         console.log(e);

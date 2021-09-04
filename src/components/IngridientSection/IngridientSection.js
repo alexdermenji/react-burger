@@ -6,10 +6,12 @@ import {
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useMemo } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setCurrentIngridient } from "../../services/actions/ingridients/setCurrentIngridient";
 import { useDrag } from "react-dnd";
-
+import { useHistory } from "react-router-dom";
+import { clickIngridient } from "../../services/actions/ingridients/clickIngridient";
+import selectIngridientsModalIsOpened from "../../services/selectors/ingridients/selectIngridientsModalIsOpened";
 const Ingridient = ({ item, onClick, constructorIngridients }) => {
   const counter = useMemo(() => {
     const ingridient = constructorIngridients.find(
@@ -59,8 +61,15 @@ const IngridientSection = ({
   id,
   constructorIngridients,
 }) => {
+  const ingridientModalIsOpened = useSelector(selectIngridientsModalIsOpened);
+  const history = useHistory();
+  console.log(history);
   const dispatch = useDispatch();
   const onIngridientClick = (data) => {
+    debugger;
+    history.push(`/ingredients/${data._id}`);
+
+    dispatch(clickIngridient());
     dispatch(setCurrentIngridient(data));
   };
 

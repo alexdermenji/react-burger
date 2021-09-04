@@ -24,7 +24,6 @@ const AppHeader = () => {
               </div>
               <span className="text text_type_main-default">Конструктор</span>
             </NavLink>
-            <NavLink to="/reset-password">Reset</NavLink>
           </li>
           <li className="p-5">
             <NavLink

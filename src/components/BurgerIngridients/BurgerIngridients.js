@@ -58,7 +58,7 @@ const BurgerIngridients = () => {
     <section className={`${styles.section} pt-10`}>
       {currentIngridient && (
         <Modal onClose={handleCloseModal} title="Детали ингридиента">
-          <IngridientDetails></IngridientDetails>
+          <IngridientDetails />
         </Modal>
       )}
       <h1 className="text text_type_main-large">Соберите бургер</h1>

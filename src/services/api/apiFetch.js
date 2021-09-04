@@ -22,65 +22,81 @@ export const setCookie = (name, value, options = {}) => {
   }
   document.cookie = updatedCookie;
 };
+window.setCookie = setCookie;
 
 export const getCookie = (name) => {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
   if (parts.length === 2) return parts.pop().split(";").shift();
 };
-const checkResponse = (res) => {
-  return res.ok ? res.json() : res.json().then((err) => Promise.reject(err));
+
+const checkResponse = async (res) => {
+  if (res.ok) {
+    const data = await res.json();
+    return { data };
+  } else {
+    return { error: res.status };
+  }
 };
 
 const refreshToken = async () => {
   try {
-    const result = await fetch(`${BURGER_API_URL}/auth/token`, {
+    const refreshToken = localStorage.getItem("refreshToken");
+    if (!refreshToken) {
+      return false;
+    }
+    const result = await fetch(`${BURGER_API_URL}auth/token`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-
-      body: JSON.stringify({ token: localStorage.getItem("refreshToken") }),
+      body: JSON.stringify({ token: refreshToken }),
     });
-    localStorage.setItem("refreshToken", result.accessToken);
-    setCookie("accessToken", result.accessToken);
-    return true;
-  } catch {
+    const data = await checkResponse(result);
+    if (data.data) {
+      localStorage.setItem("refreshToken", data.data.refreshToken);
+      setCookie("accessToken", data.data.accessToken);
+      return true;
+    }
+  } catch (e) {
+    console.error(e);
     return false;
   }
 };
 
-const apiFetch = async (url, options) => {
+const apiRequest = async (url, options) => {
   const fetchOptions = {
     ...options,
   };
+  fetchOptions.headers = fetchOptions.headers ?? {};
+  fetchOptions.headers["Authorization"] = decodeURIComponent(
+    getCookie("accessToken")
+  );
   if (options.body && (!options.headers || !options.headers["Content-Type"])) {
-    if (fetchOptions.headers) {
-      fetchOptions.headers["Content-Type"] = "application/json";
-    } else {
-      fetchOptions.headers = {
-        "Content-Type": "application/json",
-      };
-    }
+    fetchOptions.headers["Content-Type"] = "application/json";
   }
 
-  try {
-    const res = await fetch(url, fetchOptions);
-    return await checkResponse(res);
-  } catch (err) {
-    console.log(err);
-    if (err.message === "jwt expired") {
+  const res = await fetch(url, fetchOptions);
+  return await checkResponse(res);
+};
+
+const apiFetch = async (url, options) => {
+  let result = await apiRequest(url, options);
+  if (result.error) {
+    if (result.error === 401 || result.error === 403) {
       const refreshResult = await refreshToken();
       if (refreshResult) {
-        const res = await fetch(url, fetchOptions);
-        return await checkResponse(res);
+        result = await apiRequest(url, options);
+        if (result.error) {
+          return { error: result.error };
+        }
+        return result.data;
       } else {
-        return Promise.reject("Unauthorized");
+        return { error: "Unauthorized" };
       }
-    } else {
-      return Promise.reject(err);
     }
   }
+  return result.data;
 };
 
 export default apiFetch;

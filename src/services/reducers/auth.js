@@ -3,14 +3,20 @@ import { LOGIN_SUCCES } from "../actions/auth/loginSucces";
 import { REGISTER_SUCCES } from "../actions/auth/registerSucces";
 import { LOAD_USER_SUCCESS } from "../actions/auth/loadUserSucces";
 import { LOGOUT_USER_SUCCESS } from "../actions/auth/logoutUserSuccess";
+import { LOAD_USER_FAIL } from "../actions/auth/loadUserFail";
 
 const initialState = {
   user: {},
-  isLogin: false,
+  isLogin: null,
   isLoading: true,
 };
 export const authReducer = (state = initialState, action) => {
   switch (action.type) {
+    case LOAD_USER_FAIL:
+      return {
+        ...state,
+        isLogin: false,
+      };
     case LOAD_USER_SUCCESS:
       return {
         ...state,
@@ -23,7 +29,7 @@ export const authReducer = (state = initialState, action) => {
       return {
         ...state,
         user: {},
-        isLogin: null,
+        isLogin: false,
       };
     case LOGIN_SUCCES:
     case REGISTER_SUCCES:
