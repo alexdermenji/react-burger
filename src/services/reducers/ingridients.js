@@ -6,24 +6,16 @@ import { DROP_INGRIDIENT } from "../actions/ingridients/dropIngridient";
 import { DELETE_INGRIDIENT } from "../actions/ingridients/deleteIngridient";
 import { SWAP_INGRIDIENTS } from "../actions/ingridients/swapIngridients";
 import { SEND_ORDER_SUCCESS } from "../actions/order/sendOrderSucces";
-import { CLICK_INGRIDIENT } from "../actions/ingridients/clickIngridient";
 const initialState = {
   ingridientsLoading: false,
   ingridientsLoadingError: null,
   ingridients: null,
   constructorIngridients: [],
   currentIngridient: null,
-  ingridientsModalIsOpened: false,
 };
 
 export const ingridientsReducer = (state = initialState, action) => {
   switch (action.type) {
-    case CLICK_INGRIDIENT: {
-      return {
-        ...state,
-        ingridientsModalIsOpened: true,
-      };
-    }
     case SWAP_INGRIDIENTS: {
       const newIngridients = [...state.constructorIngridients];
       const { sourceIndex, destinationIndex } = action.payload;

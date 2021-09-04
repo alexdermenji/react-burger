@@ -13,6 +13,11 @@
   width: 50%;
 }
 
+.link {
+  color: white;
+  text-decoration: none;
+}
+
 .productsPrice {
   display: flex;
   justify-content: center;

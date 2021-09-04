@@ -8,7 +8,14 @@ import selectIngridientsLoading from "../../services/selectors/ingridients/selec
 import selectIngridientsError from "../../services/selectors/ingridients/selectIngridientsError";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { Route, Switch, Redirect, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect,
+  useLocation,
+  useHistory,
+} from "react-router-dom";
 import AppHeader from "../AppHeader/AppHeader";
 import BurgerIngridients from "../BurgerIngridients/BurgerIngridients";
 import BurgerConstructor from "../BurgerConstructor/BurgerConstructor";
@@ -18,9 +25,10 @@ import ForgotPassword from "../../pages/ForgotPassword";
 import ResetPassword from "../../pages/ResetPassword";
 import Profile from "../../pages/Profile";
 import NotExist from "../../pages/NotExist";
+import Modal from "../Modal/Modal";
 import Ingridient from "../../pages/Ingridient";
+import IngridientDetails from "../IngridientDetails/IngridientDetails";
 import selectIsLogin from "../../services/selectors/auth/selectIsLogin";
-import selectIngridientsModalIsOpened from "../../services/selectors/ingridients/selectIngridientsModalIsOpened";
 
 const AuthRoute = ({ path, exact, children }) => {
   const isLogin = useSelector(selectIsLogin);
@@ -45,19 +53,33 @@ const NotAuthRoute = ({ path, exact, children }) => {
 
 const App = () => {
   const dispatch = useDispatch();
-  const ingridients = useSelector(selectIngridients);
-  const ingridientsLoading = useSelector(selectIngridientsLoading);
-  const ingridientsLoadingError = useSelector(selectIngridientsError);
-  const ingridientModalIsOpened = useSelector(selectIngridientsModalIsOpened);
-  const isLogin = useSelector(selectIsLogin);
-  console.log(ingridientModalIsOpened);
   useEffect(() => {
     dispatch(getIngridients());
     dispatch(loadUser());
   }, [dispatch]);
 
+  return (
+    <Router>
+      <ModalSwitch />
+    </Router>
+  );
+};
+
+function ModalSwitch() {
+  const ingridients = useSelector(selectIngridients);
+  const ingridientsLoading = useSelector(selectIngridientsLoading);
+  const ingridientsLoadingError = useSelector(selectIngridientsError);
+  const isLogin = useSelector(selectIsLogin);
+  const history = useHistory();
   let location = useLocation();
-  let background = location.state && location.state.background;
+  let background =
+    (history.action === "PUSH" || history.action === "REPLACE") &&
+    location.state &&
+    location.state.background;
+
+  const handleModalClose = () => {
+    history.goBack();
+  };
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -99,21 +121,31 @@ const App = () => {
               <AuthRoute path="/profile">
                 <Profile />
               </AuthRoute>
-              {!ingridientModalIsOpened && (
-                <AuthRoute path="/ingridients/">
-                  <Ingridient />
-                </AuthRoute>
-              )}
+              <Route path="/ingridients/:ingridientId" exact>
+                <Ingridient />
+              </Route>
+
               <NotAuthRoute>
                 <NotExist />
               </NotAuthRoute>
             </Switch>
+
+            {background && (
+              <Route
+                path="/ingridients/:ingridientId"
+                children={
+                  <Modal onClose={handleModalClose} title="Детали ингредиента">
+                    <IngridientDetails />
+                  </Modal>
+                }
+              />
+            )}
           </main>
         )}
         {isLogin === null && <div>Loading...</div>}
       </div>
     </DndProvider>
   );
-};
+}
 
 export default App;
