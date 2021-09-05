@@ -4,14 +4,21 @@ import { REGISTER_SUCCES } from "../actions/auth/registerSucces";
 import { LOAD_USER_SUCCESS } from "../actions/auth/loadUserSucces";
 import { LOGOUT_USER_SUCCESS } from "../actions/auth/logoutUserSuccess";
 import { LOAD_USER_FAIL } from "../actions/auth/loadUserFail";
+import { RESET_PASSWORD_SENT } from "../actions/auth/resetPasswordSent";
 
 const initialState = {
   user: {},
   isLogin: null,
   isLoading: true,
+  resetPasswordSent: false,
 };
 export const authReducer = (state = initialState, action) => {
   switch (action.type) {
+    case RESET_PASSWORD_SENT:
+      return {
+        ...state,
+        resetPasswordSent: true,
+      };
     case LOAD_USER_FAIL:
       return {
         ...state,

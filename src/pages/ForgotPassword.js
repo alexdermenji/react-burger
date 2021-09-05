@@ -5,12 +5,20 @@ import {
   EmailInput,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-
-const Login = () => {
+import { useDispatch, useSelector } from "react-redux";
+import selectResetPasswordSent from "../services/selectors/auth/selectResetPasswordSent";
+import { useHistory } from "react-router-dom";
+import { resetPasswordSent } from "../services/actions/auth/resetPasswordSent";
+const ForgotPasssword = () => {
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const resetPassword = useSelector(selectResetPasswordSent);
   const [mailValue, setMailValue] = React.useState("");
   const onMailChange = (e) => {
     setMailValue(e.target.value);
   };
+
+  resetPassword && history.push("/reset-password");
 
   async function postData(url = "", data = {}) {
     const response = await fetch(url, {
@@ -25,6 +33,7 @@ const Login = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
+    dispatch(resetPasswordSent());
     postData("https://norma.nomoreparties.space/api/password-reset", {
       email: mailValue,
     }).then((data) => {
@@ -63,4 +72,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ForgotPasssword;
