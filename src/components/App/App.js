@@ -29,6 +29,7 @@ import Modal from "../Modal/Modal";
 import Ingridient from "../../pages/Ingridient";
 import IngridientDetails from "../IngridientDetails/IngridientDetails";
 import selectIsLogin from "../../services/selectors/auth/selectIsLogin";
+import Orders from "../../pages/Orders";
 
 const AuthRoute = ({ path, exact, children }) => {
   const isLogin = useSelector(selectIsLogin);
@@ -115,24 +116,27 @@ function ModalSwitch() {
               <NotAuthRoute path="/reset-password">
                 <ResetPassword />
               </NotAuthRoute>
-              <AuthRoute path="/profile">
+              <AuthRoute path="/profile" exact>
                 <Profile />
+              </AuthRoute>
+              <AuthRoute path="/profile/orders" exact>
+                <Orders />
               </AuthRoute>
               <Route path="/ingridients/:ingridientId" exact>
                 <Ingridient />
               </Route>
 
-              <NotAuthRoute>
+              <Route>
                 <NotExist />
-              </NotAuthRoute>
+              </Route>
             </Switch>
 
-            {background && (
+            {background && ingridients && (
               <Route
                 path="/ingridients/:ingridientId"
                 children={
                   <Modal onClose={handleModalClose} title="Детали ингредиента">
-                    <IngridientDetails />
+                    <IngridientDetails onEsc={handleModalClose} />
                   </Modal>
                 }
               />

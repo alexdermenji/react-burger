@@ -4,7 +4,7 @@ import { REGISTER_SUCCES } from "../actions/auth/registerSucces";
 import { LOAD_USER_SUCCESS } from "../actions/auth/loadUserSucces";
 import { LOGOUT_USER_SUCCESS } from "../actions/auth/logoutUserSuccess";
 import { LOAD_USER_FAIL } from "../actions/auth/loadUserFail";
-import { RESET_PASSWORD_SENT } from "../actions/auth/resetPasswordSent";
+import { RESET_PASSWORD_SENT } from "../actions/auth/resetPassword";
 
 const initialState = {
   user: {},

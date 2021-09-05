@@ -72,7 +72,7 @@ const Profile = () => {
             <NavLink
               activeClassName={styles.active}
               className={`${styles.listLink} text text_type_main-medium text_color_inactive`}
-              to="/"
+              to="/profile/orders"
             >
               История заказов
             </NavLink>

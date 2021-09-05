@@ -5,19 +5,23 @@ import {
   EmailInput,
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
+
 import { useDispatch, useSelector } from "react-redux";
-import selectResetPasswordSent from "../services/selectors/auth/selectResetPasswordSent";
 import { useHistory } from "react-router-dom";
-import { resetPasswordSent } from "../services/actions/auth/resetPasswordSent";
-const ForgotPasssword = () => {
-  const history = useHistory();
+import selectResetPassword from "../services/selectors/auth/selectResetPassword";
+import { resetPasswordSent } from "../services/actions/auth/resetPassword";
+
+const Login = () => {
   const dispatch = useDispatch();
-  const resetPassword = useSelector(selectResetPasswordSent);
   const [mailValue, setMailValue] = React.useState("");
+  const resetPassword = useSelector(selectResetPassword);
+  const history = useHistory();
+
   const onMailChange = (e) => {
     setMailValue(e.target.value);
   };
 
+  console.log(resetPassword);
   resetPassword && history.push("/reset-password");
 
   async function postData(url = "", data = {}) {
@@ -72,4 +76,4 @@ const ForgotPasssword = () => {
   );
 };
 
-export default ForgotPasssword;
+export default Login;
