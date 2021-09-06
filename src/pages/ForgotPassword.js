@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./Login.module.css";
 import { Link } from "react-router-dom";
 import {
@@ -11,7 +11,7 @@ import { useHistory } from "react-router-dom";
 import selectResetPassword from "../services/selectors/auth/selectResetPassword";
 import { resetPasswordSent } from "../services/actions/auth/resetPassword";
 
-const Login = () => {
+const ForgotPassword = () => {
   const dispatch = useDispatch();
   const [mailValue, setMailValue] = React.useState("");
   const resetPassword = useSelector(selectResetPassword);
@@ -21,28 +21,13 @@ const Login = () => {
     setMailValue(e.target.value);
   };
 
-  console.log(resetPassword);
-  resetPassword && history.push("/reset-password");
-
-  async function postData(url = "", data = {}) {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    return response.json(); //
-  }
+  useEffect(() => {
+    resetPassword && history.push("/reset-password");
+  }, [history, resetPassword]);
 
   const onSubmit = (e) => {
     e.preventDefault();
-    dispatch(resetPasswordSent());
-    postData("https://norma.nomoreparties.space/api/password-reset", {
-      email: mailValue,
-    }).then((data) => {
-      console.log(data);
-    });
+    dispatch(resetPasswordSent({ email: mailValue }));
   };
 
   return (
@@ -76,4 +61,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ForgotPassword;
