@@ -1,4 +1,5 @@
 import React from "react";
+import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import styles from "./Profile.module.css";
 import {
@@ -8,31 +9,62 @@ import {
   Button,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import apiFetch from "../services/api/apiFetch";
+import { getUrl } from "../services/api/apiUrl";
 import { logoutUserSuccess } from "../services/actions/auth/logoutUserSuccess";
-import { USER_DATA_CHANGE } from "../services/actions/auth/userDataChange";
+
 import { useDispatch, useSelector } from "react-redux";
 import selectUser from "../services/selectors/auth/selectUser";
+import { eraseCookie, getCookie } from "../services/api/apiFetch";
 const Profile = () => {
   const inputRef = React.useRef(null);
-
-  function eraseCookie(name) {
-    document.cookie = name + "=; Max-Age=-99999999;";
-  }
-  // const onIconClick = () => {
-  //   setTimeout(() => inputRef.current.focus(), 0);
-  //   alert("Icon Click Callback");
-  // };
-
+  const dispatch = useDispatch();
   const user = useSelector(selectUser);
 
-  const onDataChange = (e) => {
-    dispatch({
-      type: USER_DATA_CHANGE,
-      payload: {},
+  const [inputsState, setInputsState] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+  useEffect(() => {
+    setInputsState((inputsState) => ({
+      ...inputsState,
+      name: user.name,
+      email: user.email,
+      password: user.password,
+    }));
+  }, [user]);
+  const handleDataChange = (e) => {
+    const { value, name } = e.target;
+    setInputsState({
+      ...inputsState,
+      [name]: value,
     });
   };
+  const saveChanges = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(getUrl("auth/user"), {
+        method: "PATCH",
+        body: JSON.stringify(inputsState),
+        headers: {
+          Authorization: decodeURIComponent(getCookie("accessToken")),
+        },
+      });
+      const res = await response.json();
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
-  const dispatch = useDispatch();
+  const resetChanges = (e) => {
+    e.preventDefault();
+    setInputsState({
+      ...inputsState,
+      name: user.name,
+      email: user.email,
+    });
+  };
 
   const exit = () => {
     const response = apiFetch(
@@ -96,34 +128,37 @@ const Profile = () => {
         <form>
           <div className="mb-6">
             <Input
-              onChange={onDataChange}
+              onChange={handleDataChange}
               type={"text"}
               placeholder={"Имя"}
               icon={"CurrencyIcon"}
-              value={user.name}
+              value={inputsState.name}
               name={"name"}
               error={false}
               ref={inputRef}
-              // onIconClick={onIconClick}
               errorText={"Ошибка"}
               size={"default"}
             />
           </div>
           <div className="mb-6">
-            <EmailInput value={user.email} name={"email"} />
+            <EmailInput
+              value={inputsState.email}
+              name={"email"}
+              onChange={handleDataChange}
+            />
           </div>
           <div className="mb-6">
             <PasswordInput
-              onChange={onDataChange}
+              onChange={handleDataChange}
               value={"password"}
               name={"password"}
             />
           </div>
           <div>
-            <Button type="secondary" size="medium">
+            <Button onClick={resetChanges} type="secondary" size="medium">
               Отмена
             </Button>
-            <Button type="primary" size="medium">
+            <Button onClick={saveChanges} type="primary" size="medium">
               Сохранить
             </Button>
           </div>

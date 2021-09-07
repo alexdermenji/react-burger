@@ -13,7 +13,7 @@ const BurgerIngridients = () => {
   const dispatch = useDispatch();
   const [current, setCurrent] = useState(tabs[0].title);
   const ingridients = useSelector(selectIngridients);
-  console.log(ingridients);
+
   const constructorIngridients = useSelector(selectConstructorIngridients);
   const containerRef = useRef(null);
   const handleCloseModal = useCallback(() => {

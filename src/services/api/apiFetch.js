@@ -1,8 +1,6 @@
 const BURGER_API_URL = "https://norma.nomoreparties.space/api/";
 
 export const setCookie = (name, value, options = {}) => {
-  // Example of use:
-  // setCookie("user", "John", { secure: true, "max-age": 3600 });
   options = {
     path: "/",
     ...options,
@@ -23,6 +21,10 @@ export const setCookie = (name, value, options = {}) => {
   document.cookie = updatedCookie;
 };
 window.setCookie = setCookie;
+
+export const eraseCookie = (name) => {
+  document.cookie = name + "=; Max-Age=-99999999;";
+};
 
 export const getCookie = (name) => {
   const value = `; ${document.cookie}`;

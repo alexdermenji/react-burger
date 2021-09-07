@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory } from "react-router";
+import { useHistory, useLocation } from "react-router";
 import styles from "./Login.module.css";
 import { Link } from "react-router-dom";
 import apiFetch, { setCookie } from "../services/api/apiFetch";
@@ -19,6 +19,9 @@ const Login = () => {
     setMailValue(e.target.value);
   };
 
+  const location = useLocation();
+  const { from } = location.state || { from: { pathname: "/" } };
+
   const [passwordValue, setPasswordValue] = React.useState("");
   const onPasswordChange = (e) => {
     setPasswordValue(e.target.value);
@@ -37,12 +40,10 @@ const Login = () => {
 
     response
       .then((res) => {
-        console.log(res);
         setCookie("accessToken", res.accessToken);
         localStorage.setItem("refreshToken", res.refreshToken);
-        console.log("Local storage updated");
         dispatch(loadUserSuccess(res.user));
-        history.push("/");
+        history.replace(from);
       })
       .catch((e) => {
         console.log(e);

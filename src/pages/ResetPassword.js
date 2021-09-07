@@ -6,19 +6,28 @@ import {
   Button,
   Input,
 } from "@ya.praktikum/react-developer-burger-ui-components";
+import { useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
+import selectResetPassword from "../services/selectors/auth/selectResetPassword";
+import { useEffect } from "react";
 
 const ResetPassword = () => {
+  const history = useHistory();
   const [passwordValue, setPasswordValue] = React.useState("");
   const onPasswordChange = (e) => {
     setPasswordValue(e.target.value);
   };
-
+  const resetPassword = useSelector(selectResetPassword);
   const [inputValue, setInputValue] = React.useState("");
   const inputRef = React.useRef(null);
   const onIconClick = () => {
     setTimeout(() => inputRef.current.focus(), 0);
     alert("Icon Click Callback");
   };
+
+  useEffect(() => {
+    !resetPassword && history.push("/forgot-password");
+  }, [history, resetPassword]);
 
   async function postData(url = "", data = {}) {
     const response = await fetch(url, {

@@ -31,13 +31,25 @@ import IngridientDetails from "../IngridientDetails/IngridientDetails";
 import selectIsLogin from "../../services/selectors/auth/selectIsLogin";
 import Orders from "../../pages/Orders";
 
-const AuthRoute = ({ path, exact, children }) => {
+const AuthRoute = ({ children, ...rest }) => {
   const isLogin = useSelector(selectIsLogin);
+
   return (
-    <Route path={path} exact={exact}>
-      {!isLogin && <Redirect to="/login" />}
-      {isLogin && children}
-    </Route>
+    <Route
+      {...rest}
+      render={({ location }) =>
+        isLogin ? (
+          children
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/login",
+              state: { from: location },
+            }}
+          />
+        )
+      }
+    />
   );
 };
 
@@ -73,7 +85,10 @@ function ModalSwitch() {
   const isLogin = useSelector(selectIsLogin);
   const history = useHistory();
   let location = useLocation();
-  let background = location.state && location.state.background;
+  let background =
+    (history.action === "PUSH" || history.action === "REPLACE") &&
+    location.state &&
+    location.state.background;
 
   const handleModalClose = () => {
     history.goBack();
@@ -86,7 +101,7 @@ function ModalSwitch() {
         {isLogin !== null && (
           <main className={styles.wrapper}>
             <Switch location={background || location}>
-              <AuthRoute path="/" exact>
+              <Route path="/" exact>
                 {ingridientsLoading && (
                   <div className="text text_type_main-large">Loading...</div>
                 )}
@@ -103,7 +118,7 @@ function ModalSwitch() {
                     </>
                   )}
                 </section>
-              </AuthRoute>
+              </Route>
               <NotAuthRoute path="/login">
                 <Login />
               </NotAuthRoute>
