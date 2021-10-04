@@ -9,8 +9,9 @@ import { useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { setCurrentIngridient } from "../../services/actions/ingridients/setCurrentIngridient";
 import { useDrag } from "react-dnd";
-
+import { useLocation, Link } from "react-router-dom";
 const Ingridient = ({ item, onClick, constructorIngridients }) => {
+  const location = useLocation();
   const counter = useMemo(() => {
     const ingridient = constructorIngridients.find(
       (ing) => ing.data._id === item._id
@@ -34,21 +35,31 @@ const Ingridient = ({ item, onClick, constructorIngridients }) => {
       className={styles.productsItems + " pl-4 pr-4"}
       key={item._id}
     >
-      <div className={styles.productsImage + " mb-1"}>
-        <img src={item.image} alt={item.name} />
-      </div>
-      <Counter count={counter || 0} size="default" />
-      <div className={styles.productsPrice + " mb-1"}>
-        <span className="text text_type_digits-default   mr-1">
-          {item.price}{" "}
-        </span>
-        <CurrencyIcon type="primary" />
-      </div>
-      <p
-        className={styles.productsDescription + " text text_type_main-default"}
+      <Link
+        to={{
+          pathname: `/ingridients/${item._id}`,
+          state: { background: location },
+        }}
+        className={styles.link}
       >
-        {item.name}
-      </p>
+        <div className={styles.productsImage + " mb-1"}>
+          <img src={item.image} alt={item.name} />
+        </div>
+        <Counter count={counter || 0} size="default" />
+        <div className={styles.productsPrice + " mb-1"}>
+          <span className="text text_type_digits-default   mr-1">
+            {item.price}{" "}
+          </span>
+          <CurrencyIcon type="primary" />
+        </div>
+        <p
+          className={
+            styles.productsDescription + " text text_type_main-default"
+          }
+        >
+          {item.name}
+        </p>
+      </Link>
     </li>
   );
 };
