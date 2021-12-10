@@ -1,11 +1,11 @@
 export const tabs = [
-  { id: "bun", title: "Булки" },
+  { id: 'bun', title: 'Buns' },
   {
-    id: "sauce",
-    title: "Соусы",
+    id: 'sauce',
+    title: 'Sauces',
   },
   {
-    id: "main",
-    title: "Начинки",
+    id: 'main',
+    title: 'Ingridients',
   },
 ];

@@ -72,10 +72,7 @@ function ModalSwitch() {
   const isLogin = useSelector(selectIsLogin);
   const history = useHistory();
   let location = useLocation();
-  let background =
-    (history.action === "PUSH" || history.action === "REPLACE") &&
-    location.state &&
-    location.state.background;
+  let background = location.state && location.state.background;
 
   const handleModalClose = () => {
     history.goBack();
@@ -118,24 +115,27 @@ function ModalSwitch() {
               <NotAuthRoute path="/reset-password">
                 <ResetPassword />
               </NotAuthRoute>
-              <AuthRoute path="/profile">
+              <AuthRoute path="/profile" exact>
                 <Profile />
+              </AuthRoute>
+              <AuthRoute path="/profile/orders" exact>
+                {/* <Orders /> */}
               </AuthRoute>
               <Route path="/ingridients/:ingridientId" exact>
                 <Ingridient />
               </Route>
 
-              <NotAuthRoute>
+              <Route>
                 <NotExist />
-              </NotAuthRoute>
+              </Route>
             </Switch>
 
-            {background && (
+            {background && ingridients && (
               <Route
                 path="/ingridients/:ingridientId"
                 children={
                   <Modal onClose={handleModalClose} title="Детали ингредиента">
-                    <IngridientDetails />
+                    <IngridientDetails onEsc={handleModalClose} />
                   </Modal>
                 }
               />

@@ -1,18 +1,19 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 
-import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
-import styles from "./BurgerIngridients.module.css";
-import { tabs } from "../../utils/tabs";
-import IngridientSection from "../IngridientSection/IngridientSection";
+import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
+import styles from './BurgerIngridients.module.css';
+import { tabs } from '../../utils/tabs';
+import IngridientSection from '../IngridientSection/IngridientSection';
 
-import { useSelector, useDispatch } from "react-redux";
-import { setCurrentIngridient } from "../../services/actions/ingridients/setCurrentIngridient";
-import selectIngridients from "../../services/selectors/ingridients/selectIngridients";
-import selectConstructorIngridients from "../../services/selectors/ingridients/selectConstructotIngridients";
+import { useSelector, useDispatch } from 'react-redux';
+import { setCurrentIngridient } from '../../services/actions/ingridients/setCurrentIngridient';
+import selectIngridients from '../../services/selectors/ingridients/selectIngridients';
+import selectConstructorIngridients from '../../services/selectors/ingridients/selectConstructotIngridients';
 const BurgerIngridients = () => {
   const dispatch = useDispatch();
   const [current, setCurrent] = useState(tabs[0].title);
   const ingridients = useSelector(selectIngridients);
+
   const constructorIngridients = useSelector(selectConstructorIngridients);
   const containerRef = useRef(null);
   const handleCloseModal = useCallback(() => {
@@ -21,12 +22,13 @@ const BurgerIngridients = () => {
 
   useEffect(() => {
     const escPressHandler = (e) => {
-      if (e.code === "Escape") {
+      console.log('esc');
+      if (e.code === 'Escape') {
         handleCloseModal();
       }
     };
-    window.addEventListener("keydown", escPressHandler);
-    return () => window.removeEventListener("keydown", escPressHandler);
+    window.addEventListener('keydown', escPressHandler);
+    return () => window.removeEventListener('keydown', escPressHandler);
   }, [handleCloseModal]);
 
   useEffect(() => {
@@ -43,11 +45,11 @@ const BurgerIngridients = () => {
         }
       }
     }
-    container.addEventListener("scroll", () => {
+    container.addEventListener('scroll', () => {
       changeTabOnScroll();
     });
     return () => {
-      container.removeEventListener("scroll", changeTabOnScroll);
+      container.removeEventListener('scroll', changeTabOnScroll);
     };
   }, []);
 
@@ -58,8 +60,8 @@ const BurgerIngridients = () => {
           <IngridientDetails />
         </Modal>
       )} */}
-      <h1 className="text text_type_main-large">Соберите бургер</h1>
-      <div className="mt-5 mb-10">
+      <h1 className='text text_type_main-large'>Construct your burger</h1>
+      <div className='mt-5 mb-10'>
         <ul className={styles.tabsList}>
           {tabs.map((tab) => {
             return (

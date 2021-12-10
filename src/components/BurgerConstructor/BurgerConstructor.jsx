@@ -1,23 +1,23 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect } from 'react';
 import {
   ConstructorElement,
   CurrencyIcon,
   Button,
   DragIcon,
-} from "@ya.praktikum/react-developer-burger-ui-components";
-import styles from "./BurgerConstructor.module.css";
-import OrderDetails from "../OrderDetails/OrderDetails";
-import Modal from "../Modal/Modal";
-import { useDispatch, useSelector } from "react-redux";
-import selectNumber from "../../services/selectors/orders/selectNumber";
-import selectConstructorIngridients from "../../services/selectors/ingridients/selectConstructotIngridients";
-import { sendOrder } from "../../services/actions/order/sendOrder";
-import { closeOrder } from "../../services/actions/order/closeOrder";
-import { useDrop } from "react-dnd";
-import { dropIngridient } from "../../services/actions/ingridients/dropIngridient";
-import { deleteIngridient } from "../../services/actions/ingridients/deleteIngridient";
-import { swapIngridients } from "../../services/actions/ingridients/swapIngridients";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+} from '@ya.praktikum/react-developer-burger-ui-components';
+import styles from './BurgerConstructor.module.css';
+import OrderDetails from '../OrderDetails/OrderDetails';
+import Modal from '../Modal/Modal';
+import { useDispatch, useSelector } from 'react-redux';
+import selectNumber from '../../services/selectors/orders/selectNumber';
+import selectConstructorIngridients from '../../services/selectors/ingridients/selectConstructotIngridients';
+import { sendOrder } from '../../services/actions/order/sendOrder';
+import { closeOrder } from '../../services/actions/order/closeOrder';
+import { useDrop } from 'react-dnd';
+import { dropIngridient } from '../../services/actions/ingridients/dropIngridient';
+import { deleteIngridient } from '../../services/actions/ingridients/deleteIngridient';
+import { swapIngridients } from '../../services/actions/ingridients/swapIngridients';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 const BurgerConstructor = () => {
   const dispatch = useDispatch();
@@ -26,7 +26,7 @@ const BurgerConstructor = () => {
 
   //react-dnd
   const [{ isOver }, dropRef] = useDrop({
-    accept: "ingridient",
+    accept: 'ingridient',
     drop(item) {
       dispatch(dropIngridient(item));
     },
@@ -49,12 +49,12 @@ const BurgerConstructor = () => {
 
   useEffect(() => {
     const escPressHandler = (e) => {
-      if (e.code === "Escape") {
+      if (e.code === 'Escape') {
         handleCloseModal();
       }
     };
-    window.addEventListener("keydown", escPressHandler);
-    return () => window.removeEventListener("keydown", escPressHandler);
+    window.addEventListener('keydown', escPressHandler);
+    return () => window.removeEventListener('keydown', escPressHandler);
   }, [handleCloseModal]);
 
   return (
@@ -66,22 +66,20 @@ const BurgerConstructor = () => {
       )}
 
       <div
-        className="mb-10"
-        style={isOver ? { backgroundColor: "gray" } : null}
+        className='mb-10'
+        style={isOver ? { backgroundColor: 'gray' } : null}
       >
-        <div className="mb-4 pl-8 pr-4">
-          {ingridients.findIndex((item) => item.data.type === "bun") < 0 && (
-            <p className="text text_type_main-medium mt-30">
-              ✚ Добавьте булки 🍔
-            </p>
+        <div className='mb-4 pl-8 pr-4'>
+          {ingridients.findIndex((item) => item.data.type === 'bun') < 0 && (
+            <p className='text text_type_main-medium mt-30'>✚ Add buns 🍔</p>
           )}
            
           {ingridients.map((item) => {
-            if (item.data.type === "bun") {
+            if (item.data.type === 'bun') {
               return (
                 <ConstructorElement
-                  key="top"
-                  type="top"
+                  key='top'
+                  type='top'
                   isLocked={true}
                   text={`${item.data.name} верх`}
                   price={item.data.price}
@@ -105,13 +103,13 @@ const BurgerConstructor = () => {
               );
           }}
         >
-          <Droppable droppableId="id-1">
+          <Droppable droppableId='id-1'>
             {(provided) => (
               <div>
-                {ingridients.findIndex((item) => item.data.type !== "bun") <
+                {ingridients.findIndex((item) => item.data.type !== 'bun') <
                   0 && (
-                  <p className="text text_type_main-medium mt-10">
-                    ✚ Добавьте внутрь ингридиенты 🥦 🍅 🧀
+                  <p className='text text_type_main-medium mt-10'>
+                    ✚ Add ingridients inside 🥦 🍅 🧀
                   </p>
                 )}
                 <ul
@@ -124,13 +122,13 @@ const BurgerConstructor = () => {
                       dispatch(deleteIngridient({ idx, item }));
                     };
 
-                    if (item.data.type !== "bun") {
+                    if (item.data.type !== 'bun') {
                       const list = [];
                       for (let i = 0; i < item.count; i++) {
                         list.push(
                           <Draggable
                             key={`${item.data._id}_${i}`}
-                            draggableId={"draggable" + item.data._id + idx}
+                            draggableId={'draggable' + item.data._id + idx}
                             index={idx}
                           >
                             {(provided) => (
@@ -168,13 +166,13 @@ const BurgerConstructor = () => {
           </Droppable>
         </DragDropContext>
 
-        <div className="mt-4 mb-10 pl-8 pr-4">
+        <div className='mt-4 mb-10 pl-8 pr-4'>
           {ingridients.map((item) => {
-            if (item.data.type === "bun") {
+            if (item.data.type === 'bun') {
               return (
                 <ConstructorElement
-                  key="bottom"
-                  type="bottom"
+                  key='bottom'
+                  type='bottom'
                   isLocked={true}
                   text={`${item.data.name} низ`}
                   price={item.data.price}
@@ -188,16 +186,16 @@ const BurgerConstructor = () => {
       </div>
 
       <div className={styles.checkout}>
-        <div className="mr-10">
-          <span className="text text_type_digits-medium mr-1">
+        <div className='mr-10'>
+          <span className='text text_type_digits-medium mr-1'>
             {totalPrice}
           </span>
-          <CurrencyIcon type="primary" />
+          <CurrencyIcon type='primary' />
         </div>
-        {ingridients.find((item) => item.data.type === "bun") &&
+        {ingridients.find((item) => item.data.type === 'bun') &&
           ingridients.length > 1 && (
-            <Button type="primary" size="medium" onClick={sendOrderClick}>
-              Оформить заказ
+            <Button type='primary' size='medium' onClick={sendOrderClick}>
+              Create order
             </Button>
           )}
       </div>
